@@ -1,0 +1,111 @@
+Source: camunits
+Section: libs
+Priority: extra
+Maintainer: Albert Huang <albert@csail.mit.edu>
+Build-Depends: debhelper (>> 4.2.0), cdbs, gcc (>= 3.0.0), linux-libc-dev, libgl1-mesa-dev, libglib2.0-dev (>= 2.12.0), libgtk2.0-dev (>= 2.10.0), libdc1394-22-dev (>= 2.0.0), libjpeg62-dev
+Standards-Version: 3.8.0
+Xs-Vcs-Svn: https://camunits.googlecode.com/svn/debian/trunk
+Xs-Vcs-Browser: http://camunits.googlecode.com/svn/debian/trunk
+
+Package: camunits
+Architecture: any
+Depends: libcamunits6, libcamunits6-dev, camunits-utils, libcamunits-gtk6, libcamunits-gtk6-dev, camview, camunits-plugins-dc1394
+Conflicts: ${ar-conflicts}
+Description: Metapackage for the camunits libraries and binaries
+ A collection of software libraries and utilities primarily inteded for
+ robotics and machine vision researchers.
+ .
+ This is a convenience metapackage that provides no files of substances itself,
+ but does depend on all of the packages provided by the Camunits source
+ package.
+ .
+
+Package: libcamunits6
+Section: libs
+Architecture: any
+Recommends: camunits-utils, libcamunits-gtk6
+Suggests: camunits-plugins-dc1394
+Replaces: libcamunits5
+Conflicts: libcamunits5
+Depends: ${shlibs:Depends}
+Description: device-independent image acquisition and processing API
+ libcamunits is a library primarily intended for robotics and machine vision
+ researchers.  It provides a device-independent API for acquiring, logging, and
+ processing images.
+ .
+ This package contains shared libraries. 
+
+Package: libcamunits6-dev
+Section: libdevel
+Architecture: any
+Provides: libcamunits-dev
+Replaces: libcamunits5-dev
+Conflicts: libcamunits5-dev
+Depends: libcamunits6 (= ${binary:Version}), libc6-dev
+Description: device-independent image acquisition and processing API
+ libcamunits is a library primarily intended for robotics and machine vision
+ researchers.  It provides a device-independent API for acquiring, logging, and
+ processing images.
+ .
+ This package contains development files.
+
+Package: camunits-utils
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Camunits utility programs
+ This package contains utility programs to support users of the Camunits image
+ acquisition and processing API.  It currently provides camlog, a program for 
+ logging image streams to disk using the Camunits log format.
+
+Package: libcamunits-gtk6
+Section: libs
+Architecture: any
+Recommends: camview
+Depends: ${shlibs:Depends}
+Replaces: libcamunits-gtk6
+Conflicts: libcamunits-gtk6
+Description: GTK+ widgets for libcamunits
+ libcamunits-gtk is a library containing GTK+ widgets for Camunits classes.  It
+ is intended to provide an easy, consistent, and uniform way to include
+ Camunits GUI elements in a GTK+ application.
+ .
+ This package contains shared libraries. 
+
+Package: libcamunits-gtk6-dev
+Section: libdevel
+Architecture: any
+Provides: libcamunits-gtk-dev
+Replaces: libcamunits-gtk5-dev
+Conflicts: libcamunits-gtk5-dev
+Depends: libcamunits-gtk6 (= ${binary:Version}), libcamunits6-dev, libc6-dev
+Description: Camunits GTK+ widgets
+ libcamunits-gtk is a library containing GTK+ widgets for Camunits classes.  It
+ is intended to provide an easy, consistent, and uniform way to include
+ Camunits GUI elements in a GTK+ application.
+ .
+ This package contains development files.
+
+Package: camview
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: camunits-utils
+Description: Camunits viewer
+ This package contains provides camview, a program for viewing image sources
+ and testing image processing chains.  camview is primarily a tool for people
+ using libcamunits to develop machine vision applications, and allows rapid
+ assembly of previously created image processing elements.
+
+Package: camunits-plugins-dc1394
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: IEEE 1394 Digital Camera device input plugins for Camunits
+ Camunits is a library primarily intended for robotics and machine vision
+ researchers.  It provides a device-independent API for acquiring, logging, and
+ processing images.
+ .
+ This package contains plugins to provide Camunits programs with access to
+ IEEE 1394 Digital Camera devices. 
+

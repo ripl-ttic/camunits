@@ -1,0 +1,23 @@
+camunits (0.2.0-1) unstable; urgency=low
+
+  * New upstream release.  bump major soname to 6
+
+ -- Albert Huang <albert@csail.mit.edu>  Tue, 07 Apr 2009 15:53:02 -0400
+
+camunits (0.1.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Albert Huang <albert@csail.mit.edu>  Wed, 04 Mar 2009 20:30:27 -0500
+
+camunits (0.1.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Albert Huang <albert@csail.mit.edu>  Wed, 17 Dec 2008 21:11:00 -0500
+
+camunits (0.1.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Albert Huang <albert@csail.mit.edu>  Tue, 11 Nov 2008 02:49:33 -0500

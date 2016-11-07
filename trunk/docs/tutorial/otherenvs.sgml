@@ -1,0 +1,17 @@
+<chapter id="ch-otherenvs">
+    <title>Other Environments</title>
+
+    <sect1 id="otherenvs-eventloops">
+        <title>Using non GLib event loops</title>
+
+        <para>
+            <emphasis>TODO</emphasis>
+        </para>
+
+        <para>
+        For an example on how to use Camunits with a Qt event loop, take a look
+        at the <filename>examples/qt4/snapshot</filename> directory,
+        distributed with Camunits.
+        </para>
+    </sect1>
+</chapter>

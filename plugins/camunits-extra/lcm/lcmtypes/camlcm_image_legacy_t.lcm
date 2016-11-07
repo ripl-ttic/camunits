@@ -1,0 +1,14 @@
+package camlcm;
+
+struct image_legacy_t
+{
+    int64_t  utime;
+
+    int16_t  width, height, stride;
+
+    // Camunits pixelformat.  See CamPixelFormat in cam/pixels.h
+    int32_t  pixelformat;
+
+    int32_t  size;
+    byte     image[size];
+}

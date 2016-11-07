@@ -1,0 +1,10 @@
+#include <camunits/cam.h>
+
+cam_unit_get_type
+cam_unit_driver_get_type
+cam_unit_format_get_type
+cam_unit_chain_get_type
+cam_unit_manager_get_type
+cam_unit_control_get_type
+cam_unit_description_get_type
+cam_framebuffer_get_type

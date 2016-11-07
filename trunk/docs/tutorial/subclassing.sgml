@@ -1,0 +1,938 @@
+<chapter id="ch-subclassing">
+    <title>Creating Custom Units -- Subclassing <classname>CamUnit</classname> and <classname>CamUnitDriver</classname></title>
+
+    <para>
+        This chapter describes some of the more advanced features of the Camunits
+        framework.  Specifically, it describes how to create subclasses of
+        <classname>CamUnit</classname> that can also be inserted into
+        image processing chains and used in conjunction with other units.
+        <note><title>Note</title>
+        <para>
+        While we believe strongly in building image procesing elements as
+        subclasses of <classname>CamUnit</classname>,
+        undertaking the creation of a <classname>CamUnit</classname>
+        requires a much deeper understanding of how the Camunits library works than does
+        simply using the output of an image processing chain.  
+        Productively using Camunits in an image processing application
+        does not require one to build custom units.  Specifically, one can
+        choose to use Camunits primarily as an image acquisition and colorspace
+        conversion tool.  We encourage readers to look at the three features
+        mentioned next, and then decide if they are worth the investment of
+        learning how to create custom units.
+        </para></note>
+        </para>
+    <para>
+        Building a custom unit provides three main features.  
+        <variablelist>
+            <varlistentry>
+                <term><emphasis>Controls and Parameters</emphasis></term>
+                <listitem>
+                    <para>
+                        In our experience, most image processing 
+                        and image acquisition methods have some set of
+                        controls and parameters that can be adjusted to affect
+                        the output images. These parameters could be window
+                        sizes, thresholds, scale factors, etc.  Playing with
+                        hard-coded constants is often slow and tedious.
+                        Using a GUI toolkit to implement widgets that control
+                        the parameters is useful, but involves highly
+                        repetitive code and is often tedious.
+                    </para>
+                    <para>
+                        The <classname>CamUnit</classname> base class provides
+                        a control API that allows subclasses to easily add
+                        controls and parameters.  These controls can be
+                        accessed and modified programmatically just as easily
+                        as hard-coded parameters.  Additionally,
+                        when a <classname>CamUnit</classname> is used with
+                        the Camunits GTK widgets (e.g.
+                        <classname>CamUnitControlWidget</classname> and
+                        <classname>CamUnitChain</classname>), 
+                        GUI elements are automatically created that allow
+                        users to adjust the exposed controls in real-time.
+                    </para>
+                    <para>
+                        In short, <classname>CamUnit</classname> 
+                        simplifies the process of exposing controls for an
+                        image processing element.  These controls are
+                        accessible programmatically for applications without a
+                        GUI, and they are also accessible in GUI form for
+                        applications that use the Camunits GTK widgets.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis>Visualization via OpenGL</emphasis></term>
+                <listitem>
+                    <para>
+                        When developing an image processing application, a
+                        common and very useful debugging technique is to
+                        visualize the intermediate or final stages of an
+                        algorithm by rendering into the input image.  For
+                        example, a face detector might circle the detected
+                        faces, an optical flow algorithm might draw flow
+                        vectors, etc.  Camunits provides a framework for
+                        integrating visualization routines into an image
+                        processing element.  Subclasses of
+                        <classname>CamUnit</classname> can override virtual
+                        methods that will be automatically invoked when the
+                        application uses a
+                        <classname>CamUnitChainGLWidget</classname>.  This
+                        widget takes care of setting up an OpenGL context, and
+                        instructs each unit in a chain to render whatever
+                        visualization it deems useful.  
+                    </para>
+                    <para>
+                        We have specifically
+                        chosen OpenGL because it is a widely used, stable
+                        API that is both easy to use and has been implemented
+                        on all major platforms.  Although OpenGL is typically
+                        used in the context of 3D applications, it does
+                        provide a highly developed and mature API for 2D
+                        rendering.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis>Portability</emphasis></term>
+                <listitem>
+                    <para>
+                        This last bit almost need not be mentioned, but I'll
+                        say it for emphasis.  By conforming to the
+                        <classname>CamUnit</classname> abstraction, which
+                        consists primarily of an object that is capable of
+                        producing or processing images, an image processing
+                        element becomes much more portable.  This is
+                        especially true for image processing elements that
+                        transform their input into another image, such as
+                        colorspace conversion units, convolution filters,
+                        radial undistortion, etc.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </para>
+
+    <sect1 id="subclassing-gobject-type-system">
+        <title>The GObject Type System</title>
+
+        <para>
+            Camunits is written in C, which was not designed specifically for
+            object-oriented programming techniques.  The GObject type system,
+            included with GLib, is essentially an object-oriented programming
+            framework designed in C.  It makes heavy use of C structs and
+            function pointers, provides run-time type-safety, virtual methods,
+            interfaces, single-inheritance, and most of the features one would
+            normally expect from an object-oriented framework.
+        </para>
+        <para>
+            While GObject is robust and mature, it can also be awkward to
+            use in C.  We'll be completely honest here -- boilerplate code and
+            nested macros abound in GObject.  It does have a learning curve,
+            and it can be easy to become mired in the implementation details,
+            but once you've made it past the few dozen lines of boilerplate
+            needed to implement an object, everything else is pretty
+            straightforward.  For more information, see the <ulink
+                url="http://library.gnome.org/devel/gobject/">GObject
+                Reference Manual</ulink> or the 
+                <ulink url="http://library.gnome.org/devel/gobject/unstable/howto-gobject.html">GObject Tutorial</ulink>.
+        </para>
+        <para>
+            This tutorial will not focus on trying to explain how GObject
+            works.  For the most part, when we have to deal with the GObject
+            type system in this tutorial, we'll say something like, "just do
+            it this way" and expect that if you really want to know why,
+            you'll go look at the GObject documentation<footnote><para><ulink
+            url="http://library.gnome.org/devel/gobject/">http://library.gnome.org/devel/gobject/</ulink></para></footnote>.
+        </para>
+    </sect1>
+    <sect1 id="subclassing-class-relationships">
+        <title>The Relationship Between Camunits Classes</title>
+        <para>
+
+            <variablelist>
+                <varlistentry>
+                    <term>CamUnit</term>
+                    <listitem><para>
+                            As mentioned earlier,
+                            <classname>CamUnit</classname> is the fundamental
+                            class in Camunits and represents an object that can
+                            produce images.  A <classname>CamUnit</classname>
+                            typically produces images by processing input
+                            images it receives from another
+                            <classname>CamUnit</classname> (e.g. contrast
+                            normalization, radial undistortion, etc.)
+                            or by reading data
+                            from disk or an image capture device (e.g. camera
+                            or TV tuner).
+                        </para>
+                        <para>
+                            <classname>CamUnit</classname> is an abstract base
+                            class and is only useful when subclassed.
+                            However, a <classname>CamUnit</classname> should
+                            almost never be directly instantiated by a Camunits
+                            application.
+                    </para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>CamUnitDriver</term>
+                    <listitem><para>
+                            A <classname>CamUnitDriver</classname> is a
+                            factory-like class responsible for enumerating the
+                            availability of a <classname>CamUnit</classname>
+                            and instantiating a <classname>CamUnit</classname>
+                            when requested.  This feature is used primarily by
+                            input units, where many or no units of a
+                            particular type might be available.  For example,
+                            a unit driver for Video4Linux devices would
+                            enumerate all V4L devices on the system and then
+                            be able to instantiate a
+                            <classname>CamUnit</classname> for each V4L device
+                            available.  On the other hand, drivers
+                            corresponding to image processing elements will
+                            typically offer one unit.
+                            </para><para>
+                        <classname>CamUnitDriver</classname> is also an
+                        abstract base class that is only useful when
+                        subclassed.
+                    </para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>CamUnitManager</term>
+                    <listitem><para>
+                            The <classname>CamUnitManager</classname> is a
+                            factory class that maintains a central registry of
+                            drivers and available units.  The sole purpose of
+                            the <classname>CamUnitManager</classname> is to
+                            make it easy to discover available units and
+                            instantiate them.
+                            </para><para>
+                            The relationship between
+                            <classname>CamUnitManager</classname>,
+                            <classname>CamUnitDriver</classname>, and
+                            <classname>CamUnit</classname> is illustrated in
+                            <xref
+                                linkend="subclassing-relationships-manager"/>
+                    </para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>CamUnitChain</term>
+                    <listitem><para>
+                            The <classname>CamUnitChain</classname> class
+                            exists because a highly typical usage scenario is
+                            to create a number of
+                            <classname>CamUnit</classname> objects and then
+                            connect them in sequence to form an image
+                            processing chain.  A
+                            <classname>CamUnitChain</classname> provides a
+                            wrapper around
+                            <classname>CamUnitManager</classname> and handles
+                            much of the tedium involved in connecting units
+                            together.
+
+                            </para><para>
+                            The relationship between
+                            <classname>CamUnitChain</classname> and the other
+                            classes is illustrated in <xref
+                                linkend="subclassing-relationships-chain"/>
+                    </para></listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <figure id="subclassing-relationships-manager">
+            <title>Unit, Driver, and Manager</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="cam_unit_manager.png" format="PNG"/>
+                </imageobject>
+                <caption>
+                    <para>
+                        A <classname>CamUnitManager</classname> contains a
+                        registry of <classname>CamUnitDriver</classname>
+                        objects, which are capable of instantiating
+                        <classname>CamUnit</classname> objects.
+                    </para>
+                </caption>
+            </mediaobject>
+        </figure>
+        <figure id="subclassing-relationships-chain">
+            <title>Chain and other classes</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="cam_unit_chain.png" format="PNG"/>
+                </imageobject>
+                <caption>
+                    <para>
+                        A <classname>CamUnitChain</classname> wraps around a
+                        <classname>CamUnitManager</classname> and does much of
+                        the tedious work involved in creating and connecting
+                        sequences of <classname>CamUnit</classname> objects.
+                    </para>
+                </caption>
+            </mediaobject>
+        </figure>
+        <sect2 id="acquiring-relationships-connecting">
+            <title><classname>CamUnit</classname> Trees</title>
+            <para>
+                It is possible to form image processing trees, where the
+                output of one <classname>CamUnit</classname> is passed to 
+                multiple <classname>CamUnit</classname> objects.  This is not
+                yet well documented, however.  If
+                you want to do this, best to ask on the mailing lists.
+                </para><para>
+                <emphasis>TODO</emphasis>  
+            </para>
+        </sect2>
+
+    </sect1>
+    <sect1 id="subclassing-example-filter">
+        <title>Example Plugin</title>
+        <para>
+            This example demonstrates how to create an image processing unit 
+            that takes images as input, transforms each input image in some way,
+            and then produces a modified image as output.  The output of this
+            example unit is the original input image with a rectangle drawn in
+            the middle.  A parameter allows us to control the brightness of the
+            rectangle drawn.  We will call our unit "Filter Example"
+        </para>
+        <para>
+            Filter Example will be built as a Camunits plugin.  This means that
+            when the compiled result is placed in a directory in the Camunits
+            plugin path, any Camunits application will have access to the new unit.
+        </para>
+        <para>
+            <xref linkend="filter_plugin.c"/> contains the fully implemented
+            unit.  This example is also distributed with Camunits.  A step
+            by step explanation of the example follows.
+        </para>
+<example id="filter_plugin.c">
+    <title><filename>filter_plugin.c</filename></title>
+<programlisting>
+<![CDATA[
+#include <camunits/plugin.h>
+
+// This file demonstrates how to create a simple CamUnit plugin.  When
+// implementing a custom MyUnit, replace "MyFilterPlugin", "MY_FILTER_PLUGIN",
+// and "my_filter_plugin" with your own names.  
+
+typedef struct _MyFilterPlugin MyFilterPlugin;
+typedef struct _MyFilterPluginClass MyFilterPluginClass;
+
+// This macro is a type-safe alternative to "(MyFilterPlugin*)obj"
+// If obj is not a pointer to MyFilterPlugin, then a warning message
+// is printed to stderr, and the macro returns NULL.  It's reasonable to delete
+// this macro if you don't need it.
+#define MY_FILTER_PLUGIN(obj)  (G_TYPE_CHECK_INSTANCE_CAST( (obj), \
+        my_filter_plugin_get_type(), MyFilterPlugin))
+
+// Class definition struct.  member variables go in here
+struct _MyFilterPlugin {
+    // the first member must always be the superclass struct
+    CamUnit parent;
+
+    // add one member variable
+    CamUnitControl *enable_ctl;
+};
+
+// class definition.  This is pretty much a vtable, and you will rarely need to
+// change it
+struct _MyFilterPluginClass {
+    CamUnitClass parent_class;
+};
+
+GType my_filter_plugin_get_type (void);
+
+MyFilterPlugin * my_filter_plugin_new()
+{
+    return MY_FILTER_PLUGIN(g_object_new(my_filter_plugin_get_type(), NULL));
+}
+
+// magic macro.
+CAM_PLUGIN_TYPE (MyFilterPlugin, my_filter_plugin, CAM_TYPE_UNIT);
+
+// These next two functions are required as entry points for the
+// Camunits plug-in API.
+void cam_plugin_initialize (GTypeModule * module)
+{
+    // this function is defined by the magic macro above, and registers
+    // the plugin with the GObject type system.
+    my_filter_plugin_register_type (module);
+}
+
+CamUnitDriver * cam_plugin_create (GTypeModule * module)
+{
+    return cam_unit_driver_new_stock_full ("example", "plugin",
+            "Example Filter Plugin", 0, 
+            (CamUnitConstructor)my_filter_plugin_new, module);
+}
+
+// ============== MyFilterPlugin ===============
+static void _finalize (GObject *obj);
+static void on_input_frame_ready (CamUnit * super, const CamFrameBuffer *inbuf,
+        const CamUnitFormat *infmt);
+static void on_input_format_changed (CamUnit *super, 
+        const CamUnitFormat *infmt);
+
+// Class initializer.  This function sets up the class vtable, and is most
+// commonly used for overriding superclass methods.
+static void
+my_filter_plugin_class_init (MyFilterPluginClass *klass)
+{
+    // override the destructor
+    G_OBJECT_CLASS (klass)->finalize = _finalize;
+
+    // override the "on_input_frame_ready" method
+    klass->parent_class.on_input_frame_ready = on_input_frame_ready;
+}
+
+// Initializer.  This is essentially a constructor.
+static void
+my_filter_plugin_init (MyFilterPlugin *self)
+{
+    // Initialize the unit with some reasonable defaults here.
+    CamUnit *super = CAM_UNIT (self);
+
+    // create a control
+    self->enable_ctl = cam_unit_add_control_boolean (super, 
+            "enable", "Swap Red/Green Channels", 1, 1);
+
+    // request notification when the input of the unit changes
+    g_signal_connect (G_OBJECT(self), "input-format-changed",
+            G_CALLBACK(on_input_format_changed), NULL);
+}
+
+// destructor.
+static void
+_finalize (GObject *obj)
+{
+    // If we allocated memory on the heap/freestore, we'd release it here
+
+    // invoke the superclass destructor.  my_filter_plugin_parent_class is 
+    // defined by the magic macro
+    G_OBJECT_CLASS (my_filter_plugin_parent_class)->finalize(obj);
+}
+
+// this method is called whenever the input unit produces a frame
+static void
+on_input_frame_ready (CamUnit *super, const CamFrameBuffer *inbuf, 
+        const CamUnitFormat *infmt)
+{
+    MyFilterPlugin *self = MY_FILTER_PLUGIN(super);
+
+    if(!cam_unit_control_get_boolean(self->enable_ctl)) {
+        cam_unit_produce_frame(super, inbuf, infmt);
+        return;
+    }
+
+    const CamUnitFormat *outfmt = cam_unit_get_output_format(super);
+    int buf_sz = outfmt->height * outfmt->row_stride;
+    CamFrameBuffer *outbuf = cam_framebuffer_new_alloc(buf_sz);
+
+    // swap the red and green channels
+    int row;
+    int col;
+    for(row=0; row<infmt->height; row++) {
+        uint8_t *src_row = inbuf->data + infmt->row_stride*row;
+        uint8_t *dst_row = outbuf->data + outfmt->row_stride*row;
+        for(col=0; col<infmt->width; col++) {
+            dst_row[col*3+0] = src_row[col*3+1];
+            dst_row[col*3+1] = src_row[col*3+0];
+            dst_row[col*3+2] = src_row[col*3+2];
+        }
+    }
+
+    // copy the timestamp and metadata dictionary
+    cam_framebuffer_copy_metadata (outbuf, inbuf);
+
+    outbuf->bytesused = buf_sz;
+
+    cam_unit_produce_frame (super, outbuf, outfmt);
+    g_object_unref (outbuf);
+}
+
+// this is the signal handler attached in "my_filter_plugin_init", and is
+// called when the format of the input data changes.
+static void
+on_input_format_changed (CamUnit *super, const CamUnitFormat *infmt)
+{
+    // first, clear all available output formats from this unit
+    cam_unit_remove_all_output_formats (super);
+
+    // If there is no input, then we can't produce output.  
+    if (!infmt) return;
+   
+    // actually, we can only handle 8-bit RGB input data.
+    if (infmt->pixelformat != CAM_PIXEL_FORMAT_RGB) return;
+
+    cam_unit_add_output_format (super, infmt->pixelformat,
+            infmt->name, infmt->width, infmt->height, 
+            infmt->row_stride);
+}
+]]>
+</programlisting>
+</example>
+        <sect2 id="subclassing-example-naming">
+            <title>Naming Conventions</title>
+            <para>
+                Before jumping into the code, let's note a few things about
+                naming conventions.  In addition to putting an object-oriented
+                programming framework into C via a careful usage of structs,
+                macros, and function pointers, we are also retrofitting C with
+                a namespacing scheme<footnote><para><ulink
+                url="http://en.wikipedia.org/wiki/Namespace_%28programming%29#Emulating_namespaces">http://en.wikipedia.org/wiki/Namespace_(programming)#Emulating_namespaces</ulink></para></footnote>.  Although C does not inherently support
+                namespaces, we can achieve some of the benefits of a properly
+                namespaced language by following careful naming rules.  Camunits
+                follows the GLib namespacing conventions and recommends
+                the same for other applications that use Camunits.
+            </para>
+            <para>
+                The first step in adhering to these namespacing guidelines is
+                to choose a namespace.  GLib chose "g", GTK chose "gtk", and
+                Camunits chose "cam".  The example filter uses the namespace
+                "my".  The rules for naming functions, macros, and structs
+                with this namespace are then:
+                <itemizedlist>
+                    <listitem>
+                        <para><emphasis>functions and methods</emphasis> are
+                            always lowercase, with words separated by
+                            underscores.  e.g.
+                            <literal>my_sample_function</literal>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis>types</emphasis> (i.e. classes,
+                            structs, and enums) are almost always CamelCaps,
+                            with no spaces separating words.  e.g.  
+                            <literal>MySampleClass</literal>
+                    </para></listitem>
+                    <listitem>
+                        <para><emphasis>macros</emphasis> are always
+                            uppercase, with words separated by underscores.
+                            e.g. <literal>MY_SAMPLE_MACRO</literal>
+                    </para></listitem>
+                </itemizedlist>
+            </para>
+        </sect2>
+        <sect2 id="subclassing-example-hfile">
+            <title>Explanation of <filename>filter_plugin.c</filename></title>
+
+<programlisting>
+<![CDATA[
+#include <camunits/plugin.h>
+
+// This file demonstrates how to create a simple CamUnit plugin.  When
+// implementing a custom MyUnit, replace "MyFilterPlugin", "MY_FILTER_PLUGIN",
+// and "my_filter_plugin" with your own names.  
+
+typedef struct _MyFilterPlugin MyFilterPlugin;
+typedef struct _MyFilterPluginClass MyFilterPluginClass;
+
+// This macro is a type-safe alternative to "(MyFilterPlugin*)obj"
+// If obj is not a pointer to MyFilterPlugin, then a warning message
+// is printed to stderr, and the macro returns NULL.  It's reasonable to delete
+// this macro if you don't need it.
+#define MY_FILTER_PLUGIN(obj)  (G_TYPE_CHECK_INSTANCE_CAST( (obj), \
+        my_filter_plugin_get_type(), MyFilterPlugin))
+]]>
+</programlisting>
+
+            <para>
+                The first part should be pretty straightforward.  Every Camunits plugin
+                must include the <filename>&lt;camunits/plugin.h&gt;</filename> header file.
+                Next, we forward-declare two structs and declare a macro for
+                doing type-safe casting.  The structs are explained
+                below.
+
+<programlisting>
+<![CDATA[
+// Class definition struct.  member variables go in here
+struct _MyFilterPlugin {
+    // the first member must always be the superclass struct
+    CamUnit parent;
+
+    // add one member variable
+    CamUnitControl *enable_ctl;
+};
+
+// class definition.  This is pretty much a vtable, and you will rarely need to
+// change it
+struct _MyFilterPluginClass {
+    CamUnitClass parent_class;
+};
+
+]]>
+</programlisting>
+
+                These two struct definitions correspond to the class
+                definition and vtable, mentioned above.  The first struct,
+                <literal>struct _MyFilterPlugin</literal>, is what most C++
+                programmers would think of in a class definition.  The first
+                member of this struct <emphasis>must</emphasis> be
+                "<literal>CamUnit parent;</literal>".  After that, feel free to
+                declare any member variables needed in the custom unit.
+            </para>
+            <para>
+                The next struct, <literal>struct
+                _MyFilterPluginClass</literal>, primarily defines the virtual
+                methods for the class.  This is often referred to as the class
+                vtable<footnote><para><ulink
+                            url="http://en.wikipedia.org/wiki/Virtual_table">http://en.wikipedia.org/wiki/Virtual_table</ulink></para></footnote>.
+                Unless your class will itself be a superclass and provide
+                virtual methods not defined in Camunits, just rename the struct
+                and leave it alone.
+
+<programlisting>
+<![CDATA[
+GType my_filter_plugin_get_type (void);
+
+MyFilterPlugin * my_filter_plugin_new()
+{
+    return MY_FILTER_PLUGIN(g_object_new(my_filter_plugin_get_type(), NULL));
+}
+
+// magic macro.
+CAM_PLUGIN_TYPE (MyFilterPlugin, my_filter_plugin, CAM_TYPE_UNIT);
+
+// These next two functions are required as entry points for the
+// Camunits plug-in API.
+void cam_plugin_initialize (GTypeModule * module)
+{
+    // this function is defined by the magic macro above, and registers
+    // the plugin with the GObject type system.
+    my_filter_plugin_register_type (module);
+}
+]]>
+</programlisting>
+                In this block of code, we have a number of functions and macros that
+                are required by the GObject type system and Camunits plugin system, 
+                but can be safely renamed according to the naming conventions
+                we defined earlier, and then ignored.  If you 're really curious 
+                how they work, feel free to send us an e-mail, look through the source code, 
+                or browse the GObject documentation.  Otherwise, just rename them
+                and move on.
+                
+<programlisting>
+<![CDATA[
+CamUnitDriver * cam_plugin_create (GTypeModule * module)
+{
+    return cam_unit_driver_new_stock_full ("example", "plugin",
+            "Example Filter Plugin", 0, 
+            (CamUnitConstructor)my_filter_plugin_new, module);
+}
+]]>
+</programlisting>
+
+                This is the constructor for the unit driver.  As mentioned
+                earlier in this chapter, drivers for image processing units
+                typically offer exactly one unit.  To reduce complexity,
+                Camunits provides a default constructor for creating one of
+                these "stock" drivers.  The result of invoking
+                <function>cam_unit_driver_new_stock_full</function> with these
+                parameters is a driver that always has one unit available with
+                unit id "example.plugin", a display name of "Example Filter Plugin",
+                and that has no special flags.  Lastly, the constructor for
+                the stock unit is passed to the stock driver.  This will be
+                used by the stock driver when it is requested to create
+                instances of the new unit.
+
+<programlisting>
+<![CDATA[
+// ============== MyFilterPlugin ===============
+static void my_filter_plugin_finalize (GObject *obj);
+static void on_input_frame_ready (CamUnit * super, const CamFrameBuffer *inbuf,
+        const CamUnitFormat *infmt);
+static void on_input_format_changed (CamUnit *super, 
+        const CamUnitFormat *infmt);
+
+// Class initializer
+static void
+my_filter_plugin_class_init (MyFilterPluginClass *klass)
+{
+    // override the destructor
+    G_OBJECT_CLASS (klass)->finalize = my_filter_plugin_finalize;
+
+    // override the "on_input_frame_ready" method
+    klass->parent_class.on_input_frame_ready = on_input_frame_ready;
+}
+]]>
+</programlisting>
+
+                In this next section of code, we forward-declare several
+                functions, and then define the class initializer.  The class
+                initializer has two primary responsibilities.  First, it sets
+                up the class virtual method table, overriding methods of the
+                parent class when necessary.  In this example, our new class
+                overrides the <methodname>on_input_frame_ready</methodname>
+                method of its parent class.  It also overrides the destructor,
+                which is a virtual method of the base class
+                <classname>GObject</classname>
+            </para>
+            <para>
+                The second responsibility of the class initializer is
+                to define new signals that instances of the class will emit.
+                For example, <classname>CamUnit</classname> provides the
+                "frame-ready" signal, which is defined in its class
+                initializer.  Our filter class does not have any new signals,
+                but does inherit all of the signals from its parent classes.
+
+<programlisting>
+<![CDATA[
+// Initializer.  This is essentially a constructor.
+static void
+my_filter_plugin_init (MyFilterPlugin *self)
+{
+    // Initialize the unit with some reasonable defaults here.
+    CamUnit *super = CAM_UNIT (self);
+
+    // create a control
+    self->enable_ctl = cam_unit_add_control_boolean (super, 
+            "enable", "Swap Red/Green Channels", 1, 1);
+
+    // request notification when the input of the unit changes
+    g_signal_connect (G_OBJECT(self), "input-format-changed",
+            G_CALLBACK(on_input_format_changed), NULL);
+}
+]]>
+</programlisting>
+
+                Here, we define the constructor of our new class.  It's not 
+                exactly like a real constructor because it doesn't accept any arguments,
+                but it's purpose is essentially the same.
+            </para>
+            <para>
+                In terms of actual work accomplished in our constructor, our
+                example does two things.  First, it creates a single boolean
+                control that we will use to allow the user to toggle whether or not 
+                this filter is active.
+            </para>
+            <para>
+                Second, our constructor connects to a signal emitted by our
+                own intsance: the "input-format-changed" signal.  This signal
+                fires whenever the input format to our unit changes.  We will
+                use this signal handler later on to adjust the available
+                outputs produced by our unit.
+
+<programlisting>
+<![CDATA[
+
+// destructor.
+static void
+my_filter_plugin_finalize (GObject *obj)
+{
+    // If we allocated memory on the heap/freestore, we'd release it here
+
+    // invoke the superclass destructor.  my_filter_plugin_parent_class is 
+    // defined by the magic macro
+    G_OBJECT_CLASS (my_filter_plugin_parent_class)->finalize(obj);
+}
+]]>
+</programlisting>
+
+                After the constructor, we define the destructor.  We will
+                define it in almost exactly the same manner we would define a
+                C++ destructor.  First, the child class releases any system
+                resources and heap memory it has allocated.  In our cases,
+                there are none.  Next, the child class invokes the destructor
+                of its parent class.
+
+<programlisting>
+<![CDATA[
+
+// this method is called whenever the input unit produces a frame
+static void
+on_input_frame_ready (CamUnit *super, const CamFrameBuffer *inbuf, 
+        const CamUnitFormat *infmt)
+{
+    MyFilterPlugin *self = MY_FILTER_EXAMPLE(super);
+
+    if(!cam_unit_control_get_boolean(self->enable_ctl)) {
+        cam_unit_produce_frame(super, inbuf, infmt);
+        return;
+    }
+]]>
+</programlisting>
+
+                Finally, we get to the meat of the unit!  As seen in the class
+                initializer, we have overriden the
+                <function>on_input_frame_ready</function> method of the parent
+                class.  This function is called whenever the input of our unit
+                produces a frame via the "frame-ready" signal.  The three
+                arguments passed to this method are the unit itself, a pointer
+                to the framebuffer containing the actual image data, and a
+                pointer to a unit format struct describing how the image data
+                is formatted.
+
+                </para>
+                <para>
+                The first thing our unit does here is to check the status of the
+                control we defined earlier.  This provides a way for the user to 
+                interact with the unit, setting parameters, controlling behavior, etc.
+
+<programlisting>
+<![CDATA[
+    const CamUnitFormat *outfmt = cam_unit_get_output_format(super);
+    int buf_sz = outfmt->height * outfmt->row_stride;
+    CamFrameBuffer *outbuf = cam_framebuffer_new_alloc(buf_sz);
+
+    // swap the red and green channels
+    int row;
+    int col;
+    for(row=0; row<infmt->height; row++) {
+        uint8_t *src_row = inbuf->data + infmt->row_stride*row;
+        uint8_t *dst_row = outbuf->data + outfmt->row_stride*row;
+        for(col=0; col<infmt->width; col++) {
+            dst_row[col*3+0] = src_row[col*3+1];
+            dst_row[col*3+1] = src_row[col*3+0];
+            dst_row[col*3+2] = src_row[col*3+2];
+        }
+    }
+]]>
+</programlisting>
+                Worth noting is that the input framebuffer is
+                <literal>const</literal>, and so must not be modified by our
+                unit.  The first action taken by our unit is to allocate a new
+                framebuffer to store the output image.  The superclass member
+                variable <varname>fmt</varname> stores the output format that
+                our unit has been initialized to, so we can use that to
+                construct our output framebuffer accordingly.  Next, our
+                example makes a copy of the input image into our
+                output buffer, while swapping the red and the green channels.
+                
+                These are the actual guts of our unit -- drawing a rectangle
+                into the image.  We have a trivial example demonstrating how
+                to retrieve the value of a control, and then using that value
+                to affect the output.
+
+<programlisting>
+<![CDATA[
+
+    // copy the timestamp and metadata dictionary
+    cam_framebuffer_copy_metadata (outbuf, inbuf);
+
+    outbuf->bytesused = buf_sz;
+
+    cam_unit_produce_frame (super, outbuf, outfmt);
+    g_object_unref (outbuf);
+}
+]]>
+</programlisting>
+                
+                Finally, we close the method by setting the metadata of the
+                output framebuffer, and calling the
+                <function>cam_unit_produce_frame</function> method, which
+                triggers the "frame-ready" signal of our unit.  This is a
+                synchronous signalling framework, so by the time
+                <function>cam_unit_produce_frame</function> returns, all other
+                signal handlers that have subscribed to this unit will have
+                completed.  This means that we can now release the memory
+                allocated for the framebuffer.  Since GObject uses reference
+                counting for its memory management, we decrement the reference
+                count of the framebuffer to free its contents.
+
+<programlisting>
+<![CDATA[
+
+// this is the signal handler attached in "my_filter_plugin_init", and is
+// called when the format of the input data changes.
+static void
+on_input_format_changed (CamUnit *super, const CamUnitFormat *infmt)
+{
+    // first, clear all available output formats from this unit
+    cam_unit_remove_all_output_formats (super);
+
+    // If there is no input, then we can't produce output.  
+    if (!infmt) return;
+   
+    // actually, we can only handle 8-bit RGB input data.
+    if (infmt->pixelformat != CAM_PIXEL_FORMAT_RGB) return;
+
+    cam_unit_add_output_format (super, infmt->pixelformat,
+            infmt->name, infmt->width, infmt->height, 
+            infmt->row_stride);
+}
+]]>
+</programlisting>
+
+                The last step in our example is to define the function that
+                will be invoked when the input to our unit changes.  We have
+                created our unit to be able to process 8-bit RGB images of
+                arbitrary sizes, so whenever the input to our unit changes, we
+                must verify that our unit is able to process the new input
+                format.
+            </para>
+            <para>
+                Note that it is possible for the argument
+                <varname>infmt</varname> to be <literal>NULL</literal>.  This
+                will happen when there literally is no input.  In that case,
+                our unit cannot produce output when it has no input so it
+                simply does not define any available output formats.  In any
+                other case, when it determines that its input is 8-bit RGB, it
+                defines a single output format that matches the dimensions and
+                row stride of its input.
+            </para>
+        </sect2>
+        <sect2 id="subclassing-example-using">
+            <title>Using Filter Example in a Camunits application</title>
+            <para>
+                So far we have demonstrated how to create the filter example,
+                but not how to actually use it in a Camunits application.  This
+                process is actually pretty simple.  First, we must compile the filter as a 
+                shared library.  The exact command for doing so varies by platform, but on GNU/Linux, 
+                this can be done by invoking <command>gcc</command> with the
+                "-shared" option.  Since it's being built to a shared library,
+                we must also use the "-fPIC" flag to have gcc generate position
+                independent code.
+                <screen>
+                $ gcc -c filter_plugin.c -fPIC `pkg-config --cflags camunits glib-2.0`
+                $ gcc -shared -o filter_plugin.so filter_plugin.o
+                </screen>
+               
+                Once the plugin is compiled as a shared library, place it in a directory 
+                that's in the Camunits plugin search path.  The default plugin
+                search path is usually
+                <filename>/usr/local/lib/camunits</filename> or
+                <filename>/usr/lib/camunits</filename>.
+            </para>
+            <para>  
+                If you don't want to place your plugin there or are not able to do
+                so, you can also modify the Camunits plugin search path by
+                setting the <literal>CAMUNITS_PLUGIN_PATH</literal> environment
+                variable.  In <literal>bash</literal>, this can be done with
+                the following commands:
+
+                <screen>
+                $ mkdir my-plugins
+                $ mv filter_plugin.so my-plugins
+                $ export CAMUNITS_PLUGIN_PATH my-plugins
+                </screen>
+
+                After this, the unit is now accessible by your Camunits applications.  To test it out,
+                try starting <command>camview</command> and see if the unit is available.
+
+                Full source code for this example is included in the Camunits source code.
+                
+            </para>
+        </sect2>
+        <sect2 id="subclassing-example-summary">
+            <title>Filter Example summary</title>
+
+            <para>
+                In this example, we have created a subclass of
+                <classname>CamUnit</classname> that is able to process 8-bit
+                RGB images.  This example demonstrates many, but not all, of
+                the features available to subclasses of
+                <classname>CamUnit</classname>.  It exposes a single control
+                that will automatically be given a UI element when used in a
+                graphical application and the Camunits GTK widgets.  It also
+                adapts its output format as its input changes, making it
+                useful for a variety of images and not just a single pixel
+                format and resolution.
+            </para>
+            <para>
+                As always, if some parts of Camunits are not well documented
+                elsewhere in our tutorial, the best place to look is the source
+                code that is distributed with Camunits.
+            </para>
+        </sect2>
+    </sect1>
+</chapter>

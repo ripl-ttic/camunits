@@ -1,0 +1,15 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+
+camunitslibdir=@camunitsplugindir@
+camunitsdatadir=@camunitsdatadir@
+
+Name: libcamunits
+Description: Image acquisition library for machine vision researchers
+Requires: glib-2.0
+Version: @VERSION@
+Libs: -L${libdir} -lcamunits
+Cflags: -I${includedir}

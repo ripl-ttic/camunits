@@ -1,0 +1,79 @@
+<refentry id="convert-fast-debayer" revision="17 Jan 2008">
+<refmeta>
+    <refentrytitle><code>convert.fast_debayer</code></refentrytitle>
+</refmeta>
+
+<refnamediv>
+    <refname>Fast De-bayer</refname>
+    <refpurpose>SSE2/SSE3 optimized Bayer demosaic filter</refpurpose>
+</refnamediv>
+
+<refsect1>
+    <title>Description</title>
+
+    <para>
+    <literal>convert.fast_debayer</literal> is a Bayer demosaic filter that
+    is optimized with SSE2 and SSE3 instructions, so it should be pretty fast.
+    </para>
+
+    <para>The method used is described by H.S. Malvar et al<footnote><simpara>
+    H.S. Malvar, L. He, and R. Cutler. "High-quality linear interpolation
+    for demosaicing of Bayer-patterned color images".  In Proc. IEEE
+    ICASSP 2004.  May 2004.  pp. 485-8.
+    </simpara></footnote>.
+    </para>
+
+    <para>
+    Do _NOT_ try to use this filter if your architecture doesn't support
+    SSE2/SSE3. 
+    </para>
+
+    <refsect3>
+    <title>Input Formats</title>
+    <simplelist>
+    <member>Bayer RGGB</member>
+    <member>Bayer BGGR</member>
+    <member>Bayer GBRG</member>
+    <member>Bayer GRBG</member>
+    <member>Gray 8bpp</member>
+    </simplelist>
+    </refsect3>
+
+    <refsect3>
+    <title>Output Formats</title>
+    <simplelist>
+    <member>BGRA 32pp</member>
+    <member>Gray 8bpp</member>
+    </simplelist>
+    </refsect3>
+</refsect1>
+
+<refsect1>
+    <title>Controls</title>
+
+    <refsect2 id="input-example-menu">
+    <title>Tiling</title>
+    <simpara>
+    Sets the Bayer tiling pattern used by the demosaic filter.  This is
+    automatically set if the input format is a Bayer format.  If the input
+    format is Gray 8pp, then this control must be manually set.
+    </simpara>
+    <variablelist role="params">
+    <varlistentry><term><parameter>id</parameter>:</term><listitem><simpara>tiling</simpara></listitem></varlistentry>
+    <varlistentry><term><parameter>type</parameter>:</term><listitem><simpara>enum</simpara></listitem></varlistentry>
+    <varlistentry><term><parameter>values</parameter>:</term><listitem>
+    <simplelist>
+    <member>0 = GBRG</member>
+    <member>1 = GRBG</member>
+    <member>2 = BGGR</member>
+    <member>3 = RGGB</member>
+    </simplelist>
+    </listitem>
+    </varlistentry>
+    </variablelist>
+
+    </refsect2>
+
+</refsect1>
+
+</refentry>

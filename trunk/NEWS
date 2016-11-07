@@ -1,0 +1,210 @@
+camunits 0.3.0 - Jan 28, 2010
+=============================
+
+This is a maintenance release.
+
+ libcamunits:
+   - fix camunits float control
+   - fix return value bug in cam-unit_control_try_set##type()
+ core plugins:
+   - input.dc1394: set framerate for non format 7 modes
+   - input.v4l2: enable V4L2 extended controls
+ camunits-extra:
+   - bugfixes to snapshot unit
+ build system:
+   - add --without-dc1394-plugin configure option
+
+camunits 0.2.1 - Apr 20, 2009
+=============================
+
+This is a maintenance release.
+
+ libcamunits:
+   - remove math functions
+   - unit manager unset singleton on finalize
+ core plugins:
+   - input.dc1394: re-init dc1394 unit when packet size changes.
+   - convert.fast_debaye: fix regression (auto-setting of tiling control)
+   - convert.to_rgb8: add UYVY as acceptable input
+ camunits-extra:
+   - add ipp.filter-sobel
+ build system:
+	set AM_CFLAGS instead of CFLAGS
+
+camunits 0.2.0 - Mar 11, 2009
+=============================
+
+This release features a wide-ranging API overhaul, and breaks the old API in
+many ways.
+
+- Most classes have had all of their fields moved away from the public structs
+  and into private structs.  This is so that future changes do not result in
+  any API or ABI incompatibilities, and is in keeping with GTK+3 plans.
+  Currently, the only classes that still have publicly exposed fields in their
+  structs are: CamUnitFormat, CamFrameBuffer
+
+- CamUnitManager has been converted to follow a singleton pattern
+
+- CamUnitControl has been modified so that enumerated controls no longer have
+  integer values implicitly assigned by ordering.  integer values associated
+  with enumerated controls are now explicitly assigned, using arrays of
+  CamUnitControlEnumValue structs.
+
+- All core units have been converted to plugins.  All functions specific to
+  core units have been removed from the API.
+
+- when adding an output format, max_data_size is no longer specified.
+
+- convert.to_rgb now uses IPP and Framewave JPEG decompression plugins from
+  camunits-extra if they are available
+
+Camunits Core
+----
+
+new functions:
+  cam_unit_manager_get_and_ref
+  cam_unit_add_output_format
+  cam_unit_control_get_enum_values
+  cam_unit_control_get_name
+  cam_unit_control_get_id
+  cam_unit_control_get_control_type
+  cam_unit_control_get_control_type_str
+
+new structs:
+  CamUnitControlEnumValue
+
+removed functions:
+  cam_unit_manager_new
+  cam_unit_chain_new_with_manager
+  cam_unit_chain_get_manager
+  cam_unit_add_output_format_full (changed, renamed: cam_unit_add_output_format)
+  cam_unit_set_id
+  cam_unit_set_name
+  cam_unit_control_get_type_str (renamed: cam_unit_control_get_control_type_str)
+
+  all functions related to core units have been removed.
+
+modified functions:  (parameter list has changed)
+  cam_unit_add_control_enum
+  cam_unit_control_new_enum
+  cam_unit_control_modify_enum
+  cam_unit_set_preferred_format   (new  parameter added: const char *name)
+
+Camunits GTK
+----
+
+removed functions:
+  cam_unit_manager_set_manager
+
+modified functions:  (parameter list has changed)
+  cam_unit_manager_widget
+
+
+camunits 0.1.2 - Feb 15, 2009
+=============================
+* add plugin example
+* add jpeg decompress to grayscale
+* add --plugin-path command line option to camview and camlog
+* modify convert:fast_debayer to handle data that's not already 16-byte aligned
+* convert CamInputV4L to plugin.
+* disable V4L plugin by default.  V4L2 is still enabled by default.
+
+camunits 0.1.1 - Dec 17, 2008
+=============================
+
+* camview: 
+  - add FPS display, other minor UI tweaks
+  - change "-f" option to "-c"
+* libcamunits:
+  - CamInputLog: add looping controls
+  - add CAM_PIXEL_FORMAT_LE_GRAY16, opengl support
+  - CamLoggerUnit: add "auto-suffix-enable" control, option to disable
+                   auto suffix on filename
+  - rename IS_ALIGNEDxx macros to CAM_IS_ALIGNEDxx
+  - add better type safety to CamUnitControl
+  - CamUnitManager bugfixes
+* libcamunits-gtk:
+  - bugfixes in UnitControlWidget
+* camlog
+  - add "-c" option to load chain from XML description file
+
+camunits 0.1.0 - Nov 11, 2008
+=============================
+
+NEW PROJECT NAME: camunits.
+
+* better support for 16-bit pixel formats
+* input_dc1394: include format7 mode in output format string
+* unit_manager: on failure to open plugin dir, warn in dbg instead of stderr
+* unit_chain:   store output format name in saved XML.
+* unit_control_widget: slightly smarter about format changing
+* minor bugfixes all around.
+
+This release breaks the old API.  To port libcam code to Camunits code, 
+replace all instances of "libcam" and "LIBCAM" with "camunits" and "CAMUNITS",
+respectively.  This applies to source code, include paths, library names,
+linker flags, environment variables, pkg-config names, etc.
+
+The following two perl commands accomplish the search/replace:
+
+   $ perl -pi -e "s/LIBCAM/CAMUNITS/g;" <files>
+   $ perl -pi -e "s/libcam/camunits/g;" <files>
+
+libcam 0.0.9 - Jul 16, 2008
+===========================
+* unit manager widget UI enhancements
+  - sort unit descriptions by unit name
+  - toggle expansion of packages when package is double-clicked/activated
+* enable spinbutton for float unit control widget
+* warn when units produce framebuffers with zero bytesused and timestamp fields
+* fix some docs
+* fix accidental API change in 0.0.8.
+
+libcam 0.0.8 - Jun 13, 2008
+===========================
+* add --no-gui option to camview
+* input_example: fix timestamps
+* camlog: fix thrashing for inexact log seeking (e.g. timestamps)
+* update tutorial to match reality
+* add qt4 examples
+* input_v4l: was not populating timestamp, bytesused.  fixed.
+
+libcam 0.0.7 - Apr 17, 2008
+===========================
+* Fix debayer regression from last version's portability improvements
+* Allow specification of extra plugin path at configure time
+
+libcam 0.0.6 - Apr 9, 2008
+==========================
+* Add asynchronous driver handling
+* Portability improvements (can build non x86)
+
+libcam 0.0.5 - Feb 14, 2008
+===========================
+* updates across the board.
+* API changed
+
+libcam 0.0.4 - Jan 8, 2008
+==========================
+* Update DC1394 plugin to use libdc1394-2.0.0
+* Improvements to input.log
+
+libcam 0.0.3 - Dec 19, 2007
+==========================
+* Fix installation directory of libcam-gtk headers and renamed cam_gtk.h to
+  cam-gtk.h.
+
+libcam 0.0.2
+============
+* Now builds under Mac OS X (tested on Leopard)
+* Tutorial and examples improvements
+* Documentation improvements
+* Update DC1394 plugin to use libdc1394-2.0.0-rc9
+* Allow DC1394 modes other than Format 7
+* Added additional colorspace conversions
+* Allow bayer demosaic code to work on non-SSE3 CPUs (still requires SSE2)
+
+libcam 0.0.1
+============
+
+* Initial release

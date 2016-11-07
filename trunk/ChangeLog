@@ -1,0 +1,1448 @@
+2010-01-27  ashuang
+
+	* [r419] plugins/v4l2/input_v4l2.c: remove redundant dbg()
+	* [r418] plugins/v4l2/input_v4l2.c: V4L2 tweaks
+	* [r417] plugins/v4l2/input_v4l2.c: try to enumerate v4l2 controls
+	  better.
+
+2010-01-13  ashuang
+
+	* [r415] README, camunits.spec.in: update README
+
+2010-01-11  markus.achtelik
+
+	* [r414] camunits/unit.c: fixed return value bug in
+	  cam_unit_control_try_set_##type()
+
+2009-10-20  ashuang
+
+	* [r412] plugins/dc1394/input_dc1394.c: set framerate for non
+	  format 7 modes
+
+2009-09-02  ashuang
+
+	* [r411] configure.in: add --without-dc1394-plugin configure option
+
+2009-05-25  ashuang
+
+	* [r410] camunits/unit_control.c: camunits float control range
+	  (abachrac)
+
+2009-04-21  ashuang
+
+	* [r408] ChangeLog, NEWS, configure.in: release 0.2.1
+
+2009-04-19  ashuang
+
+	* [r406] plugins/dc1394/input_dc1394.c: re-init dc1394 unit when
+	  packet size changes. add some debugging info
+
+2009-04-13  ashuang
+
+	* [r402] camunits/unit_control.c: don't use floor and log10
+	  functions
+
+2009-04-09  ashuang
+
+	* [r401] camunits/unit_driver.c, camunits/unit_manager.c: unit
+	  manager unset singleton on finalize unit driver debugging output
+
+2009-03-26  ashuang
+
+	* [r395] plugins/convert/filter_fast_bayer.c: fix fast_debayer
+	  regression (auto-setting of tiling control based on input)
+
+2009-03-25  ashuang
+
+	* [r394] camunits-gtk/Makefile.am, camunits/Makefile.am,
+	  configure.in: configure.in set AM_CFLAGS instead of CFLAGS
+	* [r392] camunits/unit_format.h: update code docs
+
+2009-03-20  ashuang
+
+	* [r390] camunits-gtk/camunits-gtk.pc.in, camunits/camunits.pc.in:
+	  generated pkg-config files, remove -I include/camunits
+
+2009-03-17  ashuang
+
+	* [r386] bootstrap.sh, docs/plugins/convert-to-rgb8.sgml,
+	  plugins/convert/convert_to_rgb8.c: add UYVY as input for
+	  convert.to_rgb8 add bootstrap.sh convenience scripts
+
+2009-03-11  ashuang
+
+	* [r383] ChangeLog, NEWS, configure.in: release 0.2.0
+	* [r382] plugins/other/input_log.c: log playback hard mode bugfix
+	* [r381] camunits/unit_chain.c: unit_chain: shutdown unit before
+	  disconnecting signal handlers
+	* [r380] camunits/unit.c: fix null reference segv
+	* [r378] camunits/unit_chain.c, camunits/unit_driver.c,
+	  plugins/other/output_logger.c: logger: initialize gthread if not
+	  already initialized unit_chain, unref manager last
+
+2009-03-10  ashuang
+
+	* [r376] plugins/convert/filter_fast_bayer.c: restore old values
+	  for bayer tiling control
+	* [r375] camunits-gtk/cam_tree_store.h,
+	  camunits-gtk/unit_manager_widget.c,
+	  camunits-gtk/unit_manager_widget.h, camview/camview.c,
+	  docs/reference/libcamunits-gtk/camunits-gtk-sections.txt: change
+	  CamUnitManagerWidget API
+	  
+	  cam_unit_manager_widget_new no longer takes a parameter removed
+	  cam_unit_manager_widget_set_manager
+	* [r374] camunits-gtk/cam_tree_store.c,
+	  camunits-gtk/cam_tree_store.h, camunits-gtk/gl_drawing_area.c,
+	  camunits-gtk/gl_drawing_area.h,
+	  camunits-gtk/unit_chain_gl_widget.c,
+	  camunits-gtk/unit_chain_gl_widget.h,
+	  camunits-gtk/unit_chain_widget.c,
+	  camunits-gtk/unit_chain_widget.h,
+	  camunits-gtk/unit_control_widget.c,
+	  camunits-gtk/unit_control_widget.h,
+	  camunits-gtk/unit_description_widget.c,
+	  camunits-gtk/unit_description_widget.h,
+	  camunits-gtk/unit_manager_widget.c,
+	  camunits-gtk/unit_manager_widget.h: move all fields from
+	  camunits-gtk public structs to private structs.
+
+2009-03-08  ashuang
+
+	* [r373] camunits-gtk/unit_control_widget.c, camunits/unit.c,
+	  camunits/unit.h, camunits/unit_control.c,
+	  camunits/unit_control.h,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  plugins/convert/filter_fast_bayer.c,
+	  plugins/dc1394/input_dc1394.c, plugins/other/input_example.c,
+	  plugins/other/input_log.c, plugins/v4l/input_v4l.c,
+	  plugins/v4l2/input_v4l2.c: Modify CamUnitControl API
+	  
+	  hide all fields from public struct.
+	  
+	  enumerated controls no longer have integer values implicitly
+	  assigned by ordering. integer values associated with enumerated
+	  controls are now explicitly assigned, using arrays of
+	  CamUnitControlEnumValue structs.
+	  
+	  modified symbols: cam_unit_add_control_enum
+	  cam_unit_control_new_enum cam_unit_control_modify_enum
+	  
+	  new symbols: CamUnitControlEnumValue
+	  cam_unit_control_get_enum_values
+	* [r372] camunits/unit.c: bugfix
+	* [r370] examples/filter_plugin/filter_plugin.c: update example
+	* [r369] docs/tutorial/subclassing.sgml: update docs
+	* [r368] camunits/unit.c, camunits/unit.h,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  plugins/convert/convert_colorspace.c,
+	  plugins/convert/convert_jpeg_compress.c,
+	  plugins/convert/convert_jpeg_decompress.c,
+	  plugins/convert/convert_to_rgb8.c,
+	  plugins/convert/filter_fast_bayer.c,
+	  plugins/dc1394/input_dc1394.c, plugins/other/filter_gl.c,
+	  plugins/other/input_example.c, plugins/other/input_log.c,
+	  plugins/other/output_logger.c, plugins/v4l/input_v4l.c,
+	  plugins/v4l2/input_v4l2.c: rename cam_unit_add_output_format_full
+	  to cam_unit_add_output_format
+	* [r367] camunits/unit.c, camunits/unit.h, camunits/unit_chain.c,
+	  plugins/convert/convert_to_rgb8.c: add const char * name
+	  parameter to cam_unit_set_preferred_format
+
+2009-03-07  ashuang
+
+	* [r366] docs/tutorial/subclassing.sgml: update docs
+	* [r365] camunits/unit.c, camunits/unit.h, camunits/unit_driver.c,
+	  docs/reference/libcamunits/camunits-sections.txt: move all public
+	  fields from CamUnit to private CamUnitPrivate struct. remove
+	  cam_unit_set_id, cam_unit_set_name
+	* [r363] camunits-gtk/unit_chain_widget.c, camunits/unit.c,
+	  camunits/unit_driver.c, plugins/convert/convert_colorspace.c,
+	  plugins/convert/convert_jpeg_decompress.c,
+	  plugins/convert/convert_to_rgb8.c,
+	  plugins/convert/filter_fast_bayer.c,
+	  plugins/dc1394/input_dc1394.c, plugins/other/filter_gl.c,
+	  plugins/other/input_example.c, plugins/other/input_log.c,
+	  plugins/v4l/input_v4l.c, plugins/v4l2/input_v4l2.c: convert files
+	  to use CamUnit accessor methods instead of accessing struct
+	  fields directly
+	* [r362] camunits-gtk/unit_control_widget.c, camunits/unit.c,
+	  camunits/unit_chain.c, camunits/unit_control.c,
+	  camunits/unit_control.h: add accessor methods to CamUnitControl
+	  start refactoring to use those methods
+	* [r361] camunits/unit_driver.c: bugfix
+	* [r360] camunits-gtk/unit_description_widget.c: bugfix -- null
+	  pointer
+
+2009-03-06  ashuang
+
+	* [r359] camunits/framebuffer.h, camunits/unit.h,
+	  camunits/unit_driver.h, docs/tutorial/subclassing.sgml,
+	  examples/filter_plugin/filter_plugin.c: update documentation
+	* [r358] camlog/camlog.c, camunits-gtk/unit_description_widget.c,
+	  camunits-gtk/unit_manager_widget.c, camunits/unit_driver.c,
+	  camunits/unit_driver.h, camunits/unit_manager.c,
+	  camview/camview.c, configure.in,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  examples/basic/snapshot.c, plugins/dc1394/input_dc1394.c,
+	  plugins/other/input_log.c, plugins/v4l/input_v4l.c,
+	  plugins/v4l2/input_v4l2.c: hide CamUnitDescription fields from
+	  public struct
+	* [r357] camlog/camlog.c, camunits-gtk/unit_manager_widget.c,
+	  camunits/unit_chain.h, camunits/unit_driver.c,
+	  camunits/unit_driver.h, camunits/unit_manager.c,
+	  examples/Makefile.am, examples/basic/snapshot.c,
+	  examples/filter_example: hide CamUnitDriver fields from public
+	  struct fix some bugs introduced by last commit
+	* [r356] camview/camview.c: camview use
+	  cam_unit_manager_get_and_ref instead of chain->manager
+	* [r354] camlog/camlog.c: remove hack
+	* [r353] camunits/unit_chain.c, camunits/unit_chain.h,
+	  camunits/unit_manager.c, camunits/unit_manager.h: hide
+	  CamUnitManager and CamUnitChain struct definitions
+	* [r346] camunits/gl_texture.c, camunits/gl_texture.h,
+	  camunits/unit.c, camunits/unit.h, camunits/unit_format.c,
+	  camunits/unit_format.h, docs/tutorial/subclassing.sgml,
+	  examples/filter_example/filter_example.c,
+	  examples/filter_plugin/filter_plugin.c,
+	  plugins/convert/convert_colorspace.c,
+	  plugins/convert/convert_jpeg_compress.c,
+	  plugins/convert/convert_jpeg_decompress.c,
+	  plugins/convert/convert_to_rgb8.c,
+	  plugins/convert/filter_fast_bayer.c,
+	  plugins/dc1394/input_dc1394.c, plugins/other/filter_gl.c,
+	  plugins/other/input_example.c, plugins/other/input_log.c,
+	  plugins/other/output_logger.c, plugins/v4l/input_v4l.c,
+	  plugins/v4l2/input_v4l2.c: remove max_data_size field from
+	  CamUnitFormat
+
+2009-03-05  ashuang
+
+	* [r345] configure.in, plugins/Makefile.am, plugins/misc,
+	  plugins/other: move plugins/misc to plugins/other
+	* [r344] docs/plugins/Makefile.am,
+	  plugins/convert/convert_colorspace.c: more documentation
+	* [r343] docs/plugins/convert-fast-debayer.sgml,
+	  docs/plugins/convert-to-rgb8.sgml, docs/plugins/filter-gl.sgml,
+	  docs/plugins/input-dc1394.sgml, docs/plugins/input-example.sgml,
+	  docs/plugins/output-logger.sgml: more documentation for core
+	  plugins
+
+2009-03-04  ashuang
+
+	* [r341] docs/plugins/convert-colorspace.sgml,
+	  docs/plugins/convert-fast-debayer.sgml,
+	  docs/plugins/convert-jpeg-compress.sgml,
+	  docs/plugins/convert-jpeg-decompress.sgml: more plugin
+	  documentation
+
+2009-03-03  ashuang
+
+	* [r340] docs/plugins/build/Makefile.am,
+	  docs/plugins/camunits-plugins-docs.sgml,
+	  docs/plugins/convert-jpeg-decompress.sgml,
+	  docs/plugins/input-dc1394-widget.png,
+	  docs/plugins/input-dc1394.sgml, docs/plugins/input-example.sgml,
+	  docs/plugins/input-log.sgml, docs/plugins/input-v4l.sgml,
+	  docs/plugins/input-v4l2-widget.png, docs/plugins/input-v4l2.sgml:
+	  more plugin documentation
+	* [r338] camunits/pixels.h, configure.in, docs/Makefile.am,
+	  docs/plugins, docs/plugins/Makefile.am, docs/plugins/build,
+	  docs/plugins/build/Makefile.am,
+	  docs/plugins/camunits-plugins-docs.sgml,
+	  docs/plugins/convert-colorspace.sgml,
+	  docs/plugins/convert-fast-debayer.sgml,
+	  docs/plugins/convert-jpeg-compress.sgml,
+	  docs/plugins/convert-jpeg-decompress.sgml,
+	  docs/plugins/convert-to-rgb8.sgml, docs/plugins/filter-gl.sgml,
+	  docs/plugins/input-dc1394.sgml,
+	  docs/plugins/input-example-widget.png,
+	  docs/plugins/input-example.sgml,
+	  docs/plugins/input-log-widget.png, docs/plugins/input-log.sgml,
+	  docs/plugins/input-v4l.sgml, docs/plugins/input-v4l2.sgml,
+	  docs/plugins/output-logger-widget.png,
+	  docs/plugins/output-logger.sgml: start plugin documentation
+	* [r337] camunits/Makefile.am, camunits/convert_colorspace.c,
+	  camunits/convert_colorspace.h, camunits/convert_to_rgb8.c,
+	  camunits/convert_to_rgb8.h, camunits/filter_fast_bayer.c,
+	  camunits/filter_fast_bayer.h, camunits/filter_gl.c,
+	  camunits/filter_gl.h, camunits/input_example.c,
+	  camunits/input_example.h, camunits/input_log.c,
+	  camunits/input_log.h, camunits/output_logger.c,
+	  camunits/output_logger.h, camunits/unit_manager.c, configure.in,
+	  docs/reference/libcamunits/camunits-docs.sgml,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  docs/reference/libcamunits/camunits.types, plugins/Makefile.am,
+	  plugins/convert, plugins/convert/Makefile.am,
+	  plugins/convert/convert_colorspace.c,
+	  plugins/convert/convert_jpeg_compress.c,
+	  plugins/convert/convert_jpeg_decompress.c,
+	  plugins/convert/convert_to_rgb8.c,
+	  plugins/convert/filter_fast_bayer.c, plugins/jpeg, plugins/misc,
+	  plugins/misc/Makefile.am, plugins/misc/filter_gl.c,
+	  plugins/misc/input_example.c, plugins/misc/input_log.c,
+	  plugins/misc/output_logger.c: convert all remaining core units to
+	  plugins first pass
+
+2009-03-02  ashuang
+
+	* [r336] camunits/Makefile.am, camunits/convert_jpeg_compress.c,
+	  camunits/convert_jpeg_compress.h,
+	  camunits/convert_jpeg_decompress.c,
+	  camunits/convert_jpeg_decompress.h, camunits/convert_to_rgb8.c,
+	  camunits/input_v4l2.c, camunits/input_v4l2.h,
+	  camunits/unit_manager.c, configure.in, plugins/Makefile.am,
+	  plugins/jpeg, plugins/jpeg/Makefile.am,
+	  plugins/jpeg/convert_jpeg_compress.c,
+	  plugins/jpeg/convert_jpeg_decompress.c, plugins/v4l2,
+	  plugins/v4l2/Makefile.am, plugins/v4l2/input_v4l2.c: move V4L2
+	  input unit to plugin move JPEG compression, decompression units
+	  to plugins
+
+2009-03-01  ashuang
+
+	* [r334] camunits/Makefile.am, camunits/convert_to_rgb8.c,
+	  camunits/convert_to_rgb8.h, camunits/unit_manager.h:
+	  convert_to_rgb now uses IPP and Framewave plugins if they are
+	  available added dbg.h to dist include
+	* [r333] camlog/camlog.c, camlog/signal_pipe.c,
+	  camunits-gtk/gl_drawing_area.c, camunits/unit_chain.c,
+	  camunits/unit_chain.h, camunits/unit_manager.c,
+	  camunits/unit_manager.h, camview/camview.c,
+	  docs/reference/libcamunits/camunits-sections.txt: convert
+	  CamUnitManager to follow a singleton pattern removed:
+	  cam_unit_manager_new cam_unit_chain_new_with_manager
+	  cam_unit_chain_get_manager
+	  
+	  added: cam_unit_manager_get_and_ref
+
+2009-02-15  ashuang
+
+	* [r327] ChangeLog, NEWS, configure.in: camunits release 0.1.2
+	* [r326] camunits/framebuffer.h, camunits/log.h, camunits/pixels.h,
+	  camunits/unit_chain.h, camunits/unit_control.h,
+	  docs/reference/libcamunits/camunits-docs.sgml,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  docs/tutorial/bookinfo.sgml, docs/tutorial/subclassing.sgml,
+	  examples/filter_example/filter_example.c,
+	  examples/filter_example/filter_example.h,
+	  examples/filter_example/main.c,
+	  examples/filter_plugin/filter_plugin.c: update documentation,
+	  examples
+	* [r325] camunits/Makefile.am, camunits/input_v4l.c,
+	  camunits/input_v4l.h, camunits/log.c, camunits/pwc-ioctl.h,
+	  camunits/unit_manager.c, configure.in,
+	  docs/reference/libcamunits/camunits-docs.sgml,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  docs/reference/libcamunits/camunits.types, plugins/Makefile.am,
+	  plugins/v4l, plugins/v4l/Makefile.am, plugins/v4l/input_v4l.c,
+	  plugins/v4l/pwc-ioctl.h: convert CamInputV4L to plugin, do not
+	  build by default. Must specify --with-v4l1-plugin to configure to
+	  build
+	* [r324] camunits/filter_fast_bayer.c,
+	  camunits/filter_fast_bayer.h: modify convert:fast_debayer to
+	  handle data that's not already 16-byte aligned
+
+2009-02-12  ashuang
+
+	* [r322] camlog/camlog.c, camview/camview.c: getopt returns int not
+	  char
+
+2009-01-17  ashuang
+
+	* [r314] camlog/camlog.1, camlog/camlog.c, camview/camview.1,
+	  camview/camview.c: add --plugin-path command line option to
+	  camview and camlog
+
+2009-01-16  ashuang
+
+	* [r313] examples/filter_plugin/filter_plugin.c,
+	  examples/filter_plugin/test-chain.xml: minor update to filter
+	  plugin example
+	* [r312] camlog/camlog.c, camunits/plugin.c, camunits/unit_chain.c:
+	  fix some gcc warnings
+	* [r311] examples/filter_plugin/build.sh,
+	  examples/filter_plugin/filter_plugin.c: simplify filter_plugin
+	  example
+	* [r309] camunits/gl_texture.c, camunits/gl_texture.h,
+	  camunits/unit_format.h: add some const correctness to gl_texture,
+	  fix some docs
+	* [r308] camunits/convert_jpeg_decompress.c: add jpeg decompress
+	  grayscale output format
+
+2009-01-05  ashuang
+
+	* [r305] examples/Makefile.am, examples/filter_plugin,
+	  examples/filter_plugin/build.sh, examples/filter_plugin/clean.sh,
+	  examples/filter_plugin/filter_plugin.c,
+	  examples/filter_plugin/test-chain.xml,
+	  examples/filter_plugin/test.sh: add filter_plugin example
+
+2008-12-18  ashuang
+
+	* [r297] camlog/camlog.1: fix typo in camlog manpage
+	* [r296] ChangeLog, NEWS, configure.in, docs/release_checklist:
+	  Camunits release 0.1.1
+
+2008-12-17  ashuang
+
+	* [r295] camunits-gtk/unit_control_widget.c: unit control widget
+	  text entry button set sensitive with control enable/disable
+
+2008-12-14  ashuang
+
+	* [r293] docs/tutorial/subclassing.sgml: doc fixes
+	* [r292] docs/tutorial/subclassing.sgml: typo
+
+2008-12-12  ashuang
+
+	* [r291] camlog/camlog.1, camlog/camlog.c,
+	  camunits/output_logger.c, camunits/output_logger.h: shore up
+	  logger unit and camlog change "filename" control id to
+	  "desired-filename" add "auto-suffix-enable" control, option to
+	  disable auto suffix on filename add -c option to camlog to load
+	  chain file instead of just an input ID.
+
+2008-12-08  ashuang
+
+	* [r290] camview/camview.c: missed something in last commit
+	* [r289] camlog/camlog.1, camlog/camlog.c, camview/camview.1,
+	  camview/camview.c: update camview, camlog usage and documentation
+
+2008-11-26  ashuang
+
+	* [r288] camunits/filter_gl.c, camunits/gl_texture.c,
+	  camunits/pixels.c, camunits/pixels.h: add
+	  CAM_PIXEL_FORMAT_LE_GRAY16, filter_gl support bugfix in
+	  big-endian gray16 format
+
+2008-11-25  ashuang
+
+	* [r287] camview/camview.c: tweak camview default widget sizes
+	* [r286] camunits/input_log.c, camunits/input_log.h: fixup includes
+	* [r285] camunits/input_log.c, camunits/input_log.h: add looping
+	  controls to input_log
+
+2008-11-24  ashuang
+
+	* [r284] camview/camview.c: add FPS display to camview
+
+2008-11-21  ashuang
+
+	* [r283] camunits/unit_manager.c: unit_manager: don't call
+	  cam_unit_driver_stop on a driver that did not successfully start
+
+2008-11-18  ashuang
+
+	* [r282] camunits/pixels.c, camunits/pixels.h,
+	  camunits/pixels_sse2.c, camunits/pixels_sse3.c: rename
+	  IS_ALIGNEDxx macros to CAM_IS_ALIGNEDxx
+
+2008-11-14  ashuang
+
+	* [r280] camunits-gtk/unit_control_widget.c,
+	  camunits/unit_control.c, camview/camview.c: some bugfixes
+	* [r279] camunits-gtk/unit_control_widget.c,
+	  camunits/unit_control.c, camunits/unit_control.h: fix
+	  unit_control_widget bug (thanks markus) add better type safety to
+	  unit_control
+
+2008-11-11  ashuang
+
+	* [r270] ChangeLog, NEWS, configure.in: Camunits release 0.1.0
+	* [r269] camunits/input_v4l2.h, camunits/unit.h,
+	  camunits/unit_manager.h,
+	  docs/reference/libcamunits/camunits-docs.sgml,
+	  docs/tutorial/bookinfo.sgml, docs/tutorial/camunit.sgml,
+	  docs/tutorial/otherenvs.sgml, docs/tutorial/preface.sgml,
+	  docs/tutorial/subclassing.sgml: Camunits is simpler and easier
+	  than CamUnits
+	* [r261] ., camunits, camunits-gtk, camunits/input_v4l2.h,
+	  camunits/unit.h, camunits/unit_manager.h,
+	  docs/reference/libcamunits, docs/reference/libcamunits-gtk,
+	  docs/reference/libcamunits-gtk/Makefile.am,
+	  docs/reference/libcamunits-gtk/camunits-gtk-docs.sgml,
+	  docs/reference/libcamunits-gtk/camunits-gtk-sections.txt,
+	  docs/reference/libcamunits-gtk/camunits-gtk.types,
+	  docs/reference/libcamunits-gtk/libcam-gtk-docs.sgml,
+	  docs/reference/libcamunits-gtk/libcam-gtk-sections.txt,
+	  docs/reference/libcamunits-gtk/libcam-gtk.types,
+	  docs/reference/libcamunits/Makefile.am,
+	  docs/reference/libcamunits/camunits-docs.sgml,
+	  docs/reference/libcamunits/camunits-sections.txt,
+	  docs/reference/libcamunits/camunits.types,
+	  docs/reference/libcamunits/libcam-docs.sgml,
+	  docs/reference/libcamunits/libcam-sections.txt,
+	  docs/reference/libcamunits/libcam.types, docs/tutorial,
+	  docs/tutorial/acquiring.sgml, docs/tutorial/bookinfo.sgml,
+	  docs/tutorial/camunit.sgml, docs/tutorial/otherenvs.sgml,
+	  docs/tutorial/preface.sgml, docs/tutorial/subclassing.sgml:
+	  libcam-extra -> camunits-extra update documentation libcam ->
+	  camunits
+	* [r260] camlog/Makefile.am, camunits-gtk/Makefile.am,
+	  camunits-gtk/camunits-gtk.pc.in, camunits-gtk/libcam-gtk.pc.in,
+	  camunits-gtk/pixmaps/Makefile.am,
+	  camunits-gtk/unit_manager_widget.c, camunits/Makefile.am,
+	  camunits/camunits-gmarshal.c, camunits/camunits-gmarshal.h,
+	  camunits/camunits-gmarshal.list, camunits/camunits.pc.in,
+	  camunits/libcam-gmarshal.c, camunits/libcam-gmarshal.h,
+	  camunits/libcam-gmarshal.list, camunits/libcam.pc.in,
+	  camunits/unit_manager.c, camview/Makefile.am,
+	  docs/reference/Makefile.am, docs/reference/libcam,
+	  docs/reference/libcam-gtk, docs/reference/libcamunits,
+	  docs/reference/libcamunits-gtk, examples/basic/Makefile.am,
+	  examples/basic/snapshot.c, examples/basic/trivial-acquire.c,
+	  examples/filter_example/Makefile.am,
+	  examples/filter_example/filter_example.c,
+	  examples/filter_example/filter_example.h,
+	  examples/filter_example/main.c,
+	  examples/qt4/snapshot/CamUnitChainQtAdapter.hpp,
+	  examples/qt4/snapshot/snapshot.cpp,
+	  examples/qt4/snapshot/snapshot.pro, m4macros/Makefile.am,
+	  m4macros/camunits.m4, m4macros/libcam.m4: binaries and libraries
+	  appear to work now. documentation is stil wrong
+	* [r259] ChangeLog, Makefile.am, NEWS, camlog/Makefile.am,
+	  camlog/camlog.1, camlog/camlog.c, camunits, camunits-gtk,
+	  camunits-gtk/Makefile.am, camunits-gtk/cam-gtk.h,
+	  camunits-gtk/libcam-gtk.pc.in,
+	  camunits-gtk/unit_chain_gl_widget.c,
+	  camunits-gtk/unit_chain_gl_widget.h,
+	  camunits-gtk/unit_chain_widget.c,
+	  camunits-gtk/unit_chain_widget.h,
+	  camunits-gtk/unit_control_widget.c,
+	  camunits-gtk/unit_control_widget.h,
+	  camunits-gtk/unit_description_widget.c,
+	  camunits-gtk/unit_description_widget.h,
+	  camunits-gtk/unit_manager_widget.c,
+	  camunits-gtk/unit_manager_widget.h, camunits.spec.in,
+	  camunits/Makefile.am, camunits/cam.h, camunits/input_example.h,
+	  camunits/input_v4l2.h, camunits/libcam-gmarshal.c,
+	  camunits/libcam.pc.in, camunits/unit.c, camunits/unit.h,
+	  camunits/unit_chain.c, camunits/unit_manager.h,
+	  camview/Makefile.am, camview/camview.1, camview/camview.c,
+	  configure.in, docs/tutorial/Makefile.am, libcam, libcam-gtk,
+	  libcam.spec.in, plugins/dc1394/Makefile.am,
+	  plugins/dc1394/input_dc1394.c: start renaming things from libcam
+	  -> camunits
+	* [r257] NEWS, camlog/camlog.1, docs/tutorial/camunit.sgml,
+	  libcam-gtk/unit_control_widget.c, libcam/convert_colorspace.c,
+	  libcam/filter_gl.c, libcam/gl_texture.c, libcam/pixels.c,
+	  libcam/pixels.h, libcam/unit_chain.c, libcam/unit_manager.c,
+	  plugins/dc1394/input_dc1394.c: svnsync barfed at revision 256.
+	  Here is 256:266 from libcam
+	  
+	  ------------------------------------------------------------------------
+	  r266 | ashuang | 2008-11-10 18:50:44 -0500 (Mon, 10 Nov 2008) | 2
+	  lines
+	  
+	  some news
+	  
+	  ------------------------------------------------------------------------
+	  r265 | ashuang | 2008-10-18 15:23:03 -0400 (Sat, 18 Oct 2008) | 2
+	  lines
+	  
+	  gl_texture support for CAM_PIXEL_FORMAT_BE_GRAY16
+	  
+	  ------------------------------------------------------------------------
+	  r264 | ashuang | 2008-10-18 14:12:55 -0400 (Sat, 18 Oct 2008) | 3
+	  lines
+	  
+	  shoring up 16-bpp grayscale support. This commit breaks a
+	  rarely-used part of the API.
+	  
+	  ------------------------------------------------------------------------
+	  r263 | ashuang | 2008-10-10 16:03:51 -0400 (Fri, 10 Oct 2008) | 2
+	  lines
+	  
+	  move bumblebee2 plugin into libcam-extra
+	  
+	  ------------------------------------------------------------------------
+	  r262 | ashuang | 2008-10-10 15:31:06 -0400 (Fri, 10 Oct 2008) | 2
+	  lines
+	  
+	  debian: architecture any instead of i386/amd64
+	  
+	  ------------------------------------------------------------------------
+	  r261 | ashuang | 2008-10-10 15:30:34 -0400 (Fri, 10 Oct 2008) | 6
+	  lines
+	  
+	  input_dc1394: include format7 mode in output format string
+	  filter_gl: allow gray16 unit_manager: on failure to open plugin
+	  dir, warn in dbg instead of stderr unit_chain: store output
+	  format name in saved XML. unit_control_widget: slightly smarter
+	  about format changing
+	  
+	  ------------------------------------------------------------------------
+	  r260 | ashuang | 2008-10-10 15:19:24 -0400 (Fri, 10 Oct 2008) | 2
+	  lines
+	  
+	  add libcam-bumblebee2
+	  
+	  ------------------------------------------------------------------------
+	  r259 | ashuang | 2008-10-09 17:19:46 -0400 (Thu, 09 Oct 2008) | 1
+	  line
+	  
+	  documentation fixes
+	  ------------------------------------------------------------------------
+	  r258 | ashuang | 2008-10-09 17:18:55 -0400 (Thu, 09 Oct 2008) | 2
+	  lines
+	  
+	  fortify input_dc1394
+	  
+	  ------------------------------------------------------------------------
+	  r257 | ashuang | 2008-09-30 16:47:06 -0400 (Tue, 30 Sep 2008) | 2
+	  lines
+	  
+	  add snapshot plugin
+
+2008-09-19  ashuang
+
+	* [r254] camlog/camlog.1, camview/camview.1: fix manpages
+	* [r253] libcam/unit.c: tweak warning message
+
+2008-07-16  ashuang
+
+	* [r247] ChangeLog, NEWS, configure.in: release 0.0.9
+
+2008-07-11  ashuang
+
+	* [r246] libcam-gtk/unit_manager_widget.c: unit manager widget UI
+	  enhancements sort unit descriptions by unit name toggle expansion
+	  of packages when package is double-clicked/activated
+
+2008-07-04  ashuang
+
+	* [r240] libcam-gtk/unit_control_widget.c: enable spinbutton for
+	  float unit control widget
+
+2008-07-01  ashuang
+
+	* [r237] libcam/unit.c: warn when units produce framebuffers with
+	  zero bytesused and timestamp fields
+	* [r236] docs/reference/libcam/libcam-sections.txt,
+	  libcam/pixels.h: fix some docs
+
+2008-06-28  ashuang
+
+	* [r235] libcam/input_log.c, libcam/pixels.c, libcam/pixels.h,
+	  libcam/unit.c: fix accidental API change. add lcm input legacy.
+
+2008-06-13  ashuang
+
+	* [r234] ChangeLog, NEWS, configure.in: release 0.0.8
+
+2008-06-02  ashuang
+
+	* [r225] camview/camview.1, camview/camview.c, camview/gtk_util.c,
+	  camview/gtk_util.h: add --no-gui option to camview
+
+2008-05-30  ashuang
+
+	* [r224] libcam/input_example.c: fix input example timestamps
+	* [r220] libcam/log.c: fix thrashing for inexact log seeking (e.g.
+	  timestamps)
+
+2008-05-17  ashuang
+
+	* [r218] docs/tutorial/camunit.sgml: update tutorial to match
+	  reality
+
+2008-05-15  ashuang
+
+	* [r217] examples/qt4/snapshot/snapshot.pro: add gobject-2.0
+	  gmodule-2.0 to pkgconfig line in qmake project file
+	* [r216] libcam/input_v4l.c: input_v4l was not populating
+	  timestamp, bytesused. fixed.
+	* [r215] docs/tutorial/otherenvs.sgml: add note to otherenv doc
+	* [r214] configure.in, examples/Makefile.am, examples/qt4,
+	  examples/qt4/Makefile.am, examples/qt4/snapshot,
+	  examples/qt4/snapshot/CamUnitChainQtAdapter.cpp,
+	  examples/qt4/snapshot/CamUnitChainQtAdapter.hpp,
+	  examples/qt4/snapshot/snapshot.cpp,
+	  examples/qt4/snapshot/snapshot.pro: add qt4 examples
+
+2008-05-14  ashuang
+
+	* [r213] libcam/input_log.c: make input_log not blow up for strange
+	  type conversion issue.
+
+2008-04-17  david.moore
+
+	* [r207] ChangeLog, NEWS, configure.in, docs/release_checklist:
+	  release 0.0.7
+	* [r206] libcam/unit_manager.c: Remove some cruft
+
+2008-04-17  ashuang
+
+	* [r204] camview/Makefile.am, libcam/pixels.c: fix debayer
+	  regression
+
+2008-04-15  ashuang
+
+	* [r203] configure.in, libcam/Makefile.am, libcam/unit_manager.c:
+	  add --with-plugin-extra-path as command line argument to
+	  configure script allow multiple plugin search paths to be defined
+	  at compile time (e.g. /usr/lib/libcam and /usr/local/lib/libcam)
+
+2008-04-09  ashuang
+
+	* [r201] ChangeLog, NEWS, configure.in: release 0.0.6
+	* [r200] docs/reference/libcam/libcam-sections.txt,
+	  libcam/unit_chain.h: update documentation
+
+2008-04-04  david.moore
+
+	* [r198] configure.in, libcam/pixels.c: Improve the intel arch test
+	  and add x86_64 support
+
+2008-04-03  david.moore
+
+	* [r197] configure.in, libcam/Makefile.am, libcam/cpuid_generic.c:
+	  Added conditional compilation of cpuid.c, etc. only on Intel
+	  platforms
+
+2008-04-02  ashuang
+
+	* [r195] libcam/unit_chain.c, libcam/unit_chain.h,
+	  libcam/unit_driver.c, libcam/unit_driver.h,
+	  libcam/unit_manager.c, libcam/unit_manager.h: add:
+	  cam_unit_driver_get_fileno cam_unit_driver_update
+	  cam_unit_manager_attach_glib cam_unit_manager_detach_glib
+	  cam_unit_manager_update
+
+2008-02-14  ashuang
+
+	* [r189] configure.in: update version numbers for 0.0.5 release
+	* [r188] ChangeLog, docs/reference/libcam/libcam.types: regenerated
+	  ChangeLog with svn2cl updated libcam docs for jpeg unit renaming
+	* [r187] camview/camview.c: camview UI updates. add scrollbar for
+	  chain widget, increase default width
+
+2008-02-02  ashuang
+
+	* [r185] docs/reference/libcam/libcam-docs.sgml,
+	  docs/reference/libcam/libcam-sections.txt, libcam/Makefile.am,
+	  libcam/convert_jpeg_compress.c, libcam/convert_jpeg_compress.h,
+	  libcam/convert_jpeg_decompress.c,
+	  libcam/convert_jpeg_decompress.h, libcam/convert_to_rgb8.c,
+	  libcam/filter_jpeg.c, libcam/filter_jpeg.h,
+	  libcam/unit_manager.c: split filter_jpeg into jpeg_compress and
+	  jpeg_decompress
+
+2008-01-31  david.moore
+
+	* [r184] plugins/dc1394/input_dc1394.c: Don't treat grayscale
+	  cameras as Bayer
+
+2008-01-31  ashuang
+
+	* [r183] camview/camview.c, libcam/gl_texture.c,
+	  libcam/input_v4l2.c, libcam/unit.h, libcam/unit_chain.c,
+	  libcam/unit_chain.h: implemented cam_unit_chain_load_from_str
+	  minor fixes to other units
+
+2008-01-30  ashuang
+
+	* [r182] libcam/pixels.c: fix yuyv in pixel format enum
+	* [r181] examples, libcam/convert_colorspace.c,
+	  libcam/gl_texture.c, libcam/input_log.c, libcam/input_v4l.c,
+	  libcam/input_v4l2.c, libcam/pixels.c, libcam/pixels.h,
+	  libcam/unit.c, libcam/unit_chain.c,
+	  plugins/dc1394/input_dc1394.c: made CamPixelFormat a GType (enum)
+	  renamed cam_pixel_format_str --> cam_pixel_format_nickname unit
+	  chain saves name of pixelformat now instead of hex value
+
+2008-01-29  ashuang
+
+	* [r180] camview/camview.c, libcam/unit_chain.c,
+	  libcam/unit_chain.h: add cam_unit_chain_snapshot add "File" ->
+	  "Save" to camview
+
+2008-01-28  ashuang
+
+	* [r179] libcam/convert_colorspace.c, libcam/filter_gl.c,
+	  libcam/pixels.c, libcam/pixels.h: output.gl now can render 32-bit
+	  floating point images added gray 8u -> 32f conversion in
+	  convert.colorspace added gray 32f -> 8u conversion in pixels.[ch]
+	* [r178] libcam/pixels.c, libcam/pixels.h: change
+	  cam_pixel_convert_8u_gray_to_64f_gray so that it rescales pixels
+	  to [0,1] add cam_pixel_convert_8u_gray_to_32f_gray,
+	  cam_pixel_convert_8u_rgb_to_32f_gray
+	* [r177] configure.in, plugins/Makefile.am: fix build for moving
+	  ladybug2 away
+	* [r176] libcam/unit.h, plugins/ladybug2: moved ladybug2 directory
+	  out of trunk into plugins
+
+2008-01-27  ashuang
+
+	* [r174] libcam-gtk/unit_chain_gl_widget.c, libcam/unit_control.h:
+	  better commenting unit chain GL widget now sets up a default
+	  projection and viewing matrix.
+
+2008-01-25  ashuang
+
+	* [r171] camlog/camlog.c, camview/camview.c,
+	  docs/tutorial/acquiring.sgml, docs/tutorial/camunit.sgml,
+	  docs/tutorial/subclassing.sgml, examples/basic/snapshot.c,
+	  examples/basic/trivial-acquire.c,
+	  examples/filter_example/filter_example.h,
+	  examples/filter_example/main.c,
+	  libcam-gtk/unit_chain_gl_widget.c,
+	  libcam-gtk/unit_control_widget.c, libcam/convert_to_rgb8.c,
+	  libcam/input_log.c, libcam/input_v4l2.c, libcam/unit.c,
+	  libcam/unit.h, libcam/unit_chain.c, libcam/unit_chain.h,
+	  plugins/dc1394/input_dc1394.c: remove CamUnitStatus
+
+2008-01-24  david.moore
+
+	* [r167] docs/reference/libcam/libcam-sections.txt,
+	  libcam/input_log.c, libcam/unit_driver.c, libcam/unit_driver.h:
+	  Eliminate search_unit_description from CamUnitDriver
+
+2008-01-23  ashuang
+
+	* [r165] camlog/camlog.c, camview/camview.c,
+	  examples/basic/snapshot.c, examples/basic/trivial-acquire.c,
+	  examples/filter_example/main.c, libcam-gtk/unit_control_widget.c,
+	  libcam/convert_to_rgb8.c, libcam/input_example.c,
+	  libcam/input_log.c, libcam/input_v4l2.c, libcam/input_v4l2.h,
+	  libcam/unit.c, libcam/unit.h, libcam/unit_chain.c,
+	  libcam/unit_chain.h, plugins/dc1394/input_dc1394.c,
+	  plugins/ladybug2/input_ladybug2.c: API trimming. remove
+	  CAM_UNIT_STATUS_STREAMING and related functions
+	  (cam_unit_stream_on, cam_unit_stream_off) remove
+	  cam_unit_stream_init_any_format (instead, pass NULL to
+	  cam_unit_stream_init) implemented parameter update for int, float
+	  in unit control widget
+
+2008-01-22  ashuang
+
+	* [r161] camview/camview.c, libcam-gtk/unit_control_widget.c,
+	  libcam/input_log.c, libcam/input_log.h: add filename control to
+	  input log. remove file->open menu item from camview
+
+2008-01-21  ashuang
+
+	* [r155] configure.in, plugins/dc1394/Makefile.am,
+	  plugins/dc1394/input_dc1394.c, plugins/dc1394/input_dc1394.h:
+	  install input_dc1394.h to include/libcam/plugins
+	* [r149] m4macros/libcam.m4: bugfixes in libcam m4 macro
+	* [r146] libcam/framebuffer.c, libcam/framebuffer.h: changed
+	  cam_framebuffer_metadata_list_keys to take const
+
+2008-01-19  ashuang
+
+	* [r140] Makefile.am, configure.in, libcam/libcam.pc.in, m4macros,
+	  m4macros/Makefile.am, m4macros/README, m4macros/libcam.m4: add
+	  m4macros (untested)
+
+2008-01-17  ashuang
+
+	* [r139] libcam/input_v4l2.c, libcam/pixels.c: fix potential
+	  segfault in v4l2 cleanup change rgb -> grayscale conversion to be
+	  more perceptually accurate dot ( <0.2125, 0.7154, 0.0721>, <R, G,
+	  B>) instead of (R + G + B) / 3
+
+2008-01-09  ashuang
+
+	* [r135] NEWS, configure.in: Update NEWS and configure.in for
+	  release 0.0.4
+
+2008-01-08  ashuang
+
+	* [r134] ChangeLog, docs/tutorial/camunit.sgml,
+	  docs/tutorial/images, docs/tutorial/subclassing.sgml,
+	  libcam-gtk/unit_chain_gl_widget.c: add "gl-draw-finished" signal
+	  to CamUnitChainGLWidget minor update to tutorial update changelog
+
+2007-12-30  ashuang
+
+	* [r131] libcam/input_log.c, libcam/log.h: input_log: implemented
+	  advance mode control, log playback speed control. log: change
+	  file offset fields in CamLogFrameInfo from uint64 to int64 to be
+	  more consistent with API
+	* [r130] libcam/pixels.c, libcam/pixels.h, libcam/unit.c,
+	  libcam/unit.h: added CAM_PIXEL_FORMAT_ANY, so that
+	  cam_unit_stream_init_any_format doesn't have to take
+	  CAM_PIXEL_FORMAT_INVALID when any format is okay.
+
+2007-12-20  david.moore
+
+	* [r127] ChangeLog, NEWS, configure.in, docs/release_checklist:
+	  Update NEWS and configure.in for release 0.0.3
+	* [r126] camview/camview.c,
+	  docs/reference/libcam-gtk/libcam-gtk-sections.txt,
+	  docs/reference/libcam-gtk/libcam-gtk.types,
+	  examples/filter_example/main.c, libcam-gtk/Makefile.am,
+	  libcam-gtk/cam-gtk.h, libcam-gtk/cam_gtk.h: Renamed cam_gtk.h to
+	  cam-gtk.h
+
+2007-12-18  david.moore
+
+	* [r125] examples/filter_example/main.c, libcam-gtk/Makefile.am:
+	  Fix install location for libcam-gtk headers
+	* [r116] ChangeLog, NEWS, configure.in: Update NEWS/configure.in
+	  for 0.0.2 release
+	* [r115] docs/reference/libcam/libcam-sections.txt,
+	  docs/tutorial/Makefile.am, examples/filter_example/Makefile.am,
+	  libcam/capture_raw1394.c, libcam/capture_raw1394.h: Fix tarball
+	  problems
+	* [r114] Makefile.am, configure.in, examples, examples/Makefile.am,
+	  examples/basic, examples/basic/Makefile,
+	  examples/basic/Makefile.am, examples/filter_example,
+	  examples/filter_example/Makefile,
+	  examples/filter_example/Makefile.am: Added the examples/
+	  directory to automake
+	* [r113] docs/reference/libcam-gtk/libcam-gtk-sections.txt,
+	  docs/reference/libcam/libcam-sections.txt: Update the list of
+	  functions that appear in the API documentation.
+
+2007-12-17  david.moore
+
+	* [r112] ChangeLog, libcam/convert_colorspace.c, libcam/pixels.c,
+	  libcam/pixels.h: Add colorspace conversion for UYVY and make
+	  naming more consistent
+
+2007-12-17  ashuang
+
+	* [r111] po/Makevars: add myself to copyright holders in
+	  po/Makevars
+	* [r109] docs/tutorial/build-html, docs/tutorial/camunit.sgml,
+	  docs/tutorial/subclassing.sgml: tutorial polish
+
+2007-12-16  ashuang
+
+	* [r106] configure.in, docs/Makefile.am, docs/tutorial,
+	  docs/tutorial/Makefile.am, docs/tutorial/acquiring.sgml,
+	  docs/tutorial/acquiring.xml, docs/tutorial/bookinfo.sgml,
+	  docs/tutorial/bookinfo.xml, docs/tutorial/cam_unit_chain.png,
+	  docs/tutorial/cam_unit_manager.png,
+	  docs/tutorial/camunit-controls.png, docs/tutorial/camunit.sgml,
+	  docs/tutorial/camunit.xml, docs/tutorial/camview-unit-id.png,
+	  docs/tutorial/fdl.sgml, docs/tutorial/fdl.xml,
+	  docs/tutorial/html, docs/tutorial/images/cam_unit_chain.png,
+	  docs/tutorial/images/cam_unit_manager.png,
+	  docs/tutorial/images/camunit-controls.png,
+	  docs/tutorial/images/camview-unit-id.png,
+	  docs/tutorial/otherenvs.sgml, docs/tutorial/otherenvs.xml,
+	  docs/tutorial/preface.sgml, docs/tutorial/preface.xml,
+	  docs/tutorial/subclassing.sgml, docs/tutorial/subclassing.xml,
+	  docs/tutorial/tutorial.sgml, docs/tutorial/tutorial.xml: modified
+	  tutorial to use gtk-doc.
+	* [r105] docs/tutorial/subclassing.xml: tutorial work
+	* [r104] libcam/filter_gl.c: trimming code in filter_gl, no
+	  functionality changes
+	* [r103] docs/tutorial/images/cam_unit_chain.png,
+	  docs/tutorial/images/cam_unit_manager.png,
+	  docs/tutorial/subclassing.xml: more tutorial work
+
+2007-12-15  ashuang
+
+	* [r102] docs/tutorial/subclassing.xml, docs/tutorial/tutorial.xml,
+	  examples/filter_example/filter_example.c: more tutorial work
+	* [r101] examples/filter_example/filter_example.c: better
+	  commenting for filter_example
+	* [r100] examples/filter_example,
+	  examples/filter_example/filter_example.c,
+	  examples/filter_example/filter_example.h,
+	  examples/filter_example/main.c: renames in filter_example. change
+	  namespace to "My"
+
+2007-12-15  david.moore
+
+	* [r99] ChangeLog, plugins/dc1394/input_dc1394.c: Add non-format7
+	  modes to input_dc1394
+
+2007-12-14  ashuang
+
+	* [r98] docs/tutorial/acquiring.xml,
+	  docs/tutorial/fundamentals.xml, docs/tutorial/subclassing.xml,
+	  docs/tutorial/tutorial.xml, examples/Makefile, examples/basic,
+	  examples/basic/Makefile, examples/basic/snapshot.c,
+	  examples/basic/trivial-acquire.c, examples/filter_example,
+	  examples/filter_example/Makefile,
+	  examples/filter_example/filter_example.c,
+	  examples/filter_example/filter_example.h,
+	  examples/filter_example/main.c, examples/snapshot.c,
+	  examples/trivial-acquire.c, libcam-gtk/Makefile.am: added
+	  unit_description_widget.h and cam_tree_store.h to exported header
+	  files started tutorial chapter on implementing custom units added
+	  filter_example to examples moved examples/snapshot.c and
+	  examples/trivial-acquire.c into examples/basic
+
+2007-12-14  david.moore
+
+	* [r97] ChangeLog, configure.in, plugins/dc1394/input_dc1394.c,
+	  plugins/dc1394/input_dc1394.h: Update input_dc1394 to use version
+	  2.0.0-rc9 of libdc1394
+
+2007-12-14  ashuang
+
+	* [r95] docs/reference/libcam/libcam-docs.sgml,
+	  docs/reference/libcam/libcam-sections.txt,
+	  libcam/convert_colorspace.h, libcam/convert_to_rgb8.h,
+	  libcam/filter_fast_bayer.h, libcam/filter_gl.h,
+	  libcam/filter_jpeg.h, libcam/input_log.h, libcam/input_v4l.h,
+	  libcam/input_v4l2.h, libcam/output_logger.h, libcam/unit.h,
+	  libcam/unit_manager.c, libcam/unit_manager.h: more documentation
+	* [r94] libcam/unit_chain.h, libcam/unit_manager.h: update
+	  documentation
+	* [r93] libcam/plugin.c, libcam/plugin.h, libcam/unit_manager.c,
+	  libcam/unit_manager.h: rename cam_plugin_load_plugins to
+	  cam_unit_manager_add_plugin_dir
+	  cam_unit_manager_register_core_drivers now searches all
+	  directories specified in colon separated LIBCAM_PLUGIN_PATH
+	  environment variable for plugins.
+	* [r92] libcam/filter_jpeg.c: install jpeg error_exit handler so
+	  that libcam programs don't abort on bad jpeg data
+	* [r91] libcam/unit.c, libcam/unit_chain.c: modify
+	  cam_unit_stream_init_any_format to prefer higher resolutions
+
+2007-12-13  ashuang
+
+	* [r90] camlog/camlog.c, camlog/signal_pipe.h,
+	  docs/tutorial/camunit.xml, libcam/unit.c, libcam/unit.h,
+	  libcam/unit_chain.c, libcam/unit_control.h: libcam -- fix
+	  unit_chain stupidity (don't require attach_glib to be called
+	  before set_desired_status) camlog -- fix compiler warnings
+
+2007-12-12  david.moore
+
+	* [r89] configure.in: Make configure.in compatible with /bin/sh
+
+2007-12-11  ashuang
+
+	* [r88] libcam/framebuffer.h, libcam/input_example.h,
+	  libcam/input_v4l.h, libcam/unit_format.h: update documentation
+
+2007-12-06  david.moore
+
+	* [r86] configure.in: Fix the build for Mac OS. Works with Leopard.
+
+2007-12-05  david.moore
+
+	* [r85] ., ChangeLog, configure.in, libcam/Makefile.am,
+	  libcam/cpuid.c, libcam/cpuid.h, libcam/pixels.c, libcam/pixels.h,
+	  libcam/pixels_sse2.c, libcam/pixels_sse2.h, libcam/pixels_sse3.c,
+	  libcam/pixels_sse3.h: Detect SSE2 and SSE3 at runtime and act
+	  accordingly
+
+2007-12-04  ashuang
+
+	* [r83] libcam/filter_bayer.c, libcam/filter_bayer.h: removed
+	  filter_bayer
+	* [r82] libcam/input_v4l.h, libcam/input_v4l2.h, libcam/pixels.h,
+	  libcam/unit.c, libcam/unit_chain.c, libcam/unit_driver.c,
+	  libcam/unit_manager.c: removed some dead signals
+	  (CamUnit::buffer-ready, CamUnitChain::buffer-ready,
+	  CamUnitManager::unit-driver-removed)
+	  
+	  updated documentation for other signals and some classes
+
+2007-12-02  david.moore
+
+	* [r79] docs/release_checklist: Added the release checklist
+	* [r76] ChangeLog, NEWS, README: Updated README/NEWS/ChangeLog for
+	  0.0.1 release
+	* [r75] camview/Makefile.am, configure.in, libcam/Makefile.am,
+	  libcam/input_v4l.c, libcam/pwc-ioctl.h, libcam/vendor: Fixes
+	  needed to generate the tarball.
+
+2007-12-01  david.moore
+
+	* [r72] libcam/input_example.c: Clear image to black in
+	  input_example
+	* [r71] libcam-gtk/unit_manager_widget.c: Emit a warning if pixmaps
+	  are not found
+	* [r70] libcam-gtk/unit_chain_gl_widget.c: Make sure the rendering
+	  is shut down before hiding the gl_area
+
+2007-11-30  ashuang
+
+	* [r68] docs/tutorial/camunit.xml,
+	  docs/tutorial/images/camunit-controls.png: updated tutorial for
+	  camunit control tooltip
+
+2007-11-30  david.moore
+
+	* [r67] libcam-gtk/unit_control_widget.c, libcam/unit_control.c,
+	  libcam/unit_control.h: Put more information in the
+	  unit_control_widget tooltips
+	* [r66] libcam-gtk/unit_control_widget.c,
+	  libcam-gtk/unit_control_widget.h: Add tooltips of control ids to
+	  unit_control_widget
+
+2007-11-30  ashuang
+
+	* [r63] docs/tutorial/bookinfo.xml, docs/tutorial/camunit.xml,
+	  docs/tutorial/fundamentals.xml,
+	  docs/tutorial/images/camunit-controls.png,
+	  docs/tutorial/images/camview-unit-id.png,
+	  docs/tutorial/preface.xml, docs/tutorial/quickstart.xml,
+	  docs/tutorial/tutorial.xml: tutorial contents
+
+2007-11-30  david.moore
+
+	* [r62] camlog/Makefile.am, camview/Makefile.am, configure.in,
+	  libcam-gtk/Makefile.am, libcam/Makefile.am,
+	  plugins/dc1394/Makefile.am: Detect presence of libjpeg and libGL
+	  in the configure script. Detect presence of libdc1394 in the
+	  configure script and conditionally enable the input_dc1394
+	  plugin.
+
+2007-11-30  ashuang
+
+	* [r61] docs/tutorial/bookinfo.xml, docs/tutorial/fundamentals.xml,
+	  docs/tutorial/html, docs/tutorial/preface.xml, examples,
+	  examples/Makefile, examples/snapshot.c,
+	  examples/trivial-acquire.c: fleshing out tutorial. added
+	  trivial-acquire.c example
+	* [r60] libcam/filter_gl.c, libcam/filter_gl.h,
+	  libcam/input_example.c, libcam/input_example.h: make
+	  input_example marginally less lame. filter_gl draws a black
+	  rectangle if it hasn't received an image yet.
+
+2007-11-30  david.moore
+
+	* [r59] libcam-gtk/cam_tree_store.h: Fix gtk-doc build warning
+	* [r58] ., configure.in, docs/reference/Makefile.am,
+	  docs/reference/libcam, docs/reference/libcam-gtk,
+	  docs/reference/libcam-gtk/Makefile.am,
+	  docs/reference/libcam-gtk/libcam-gtk-docs.sgml,
+	  docs/reference/libcam-gtk/libcam-gtk-sections.txt,
+	  docs/reference/libcam-gtk/libcam-gtk.types, libcam-gtk/cam_gtk.h:
+	  Added gtk-doc for libcam-gtk
+	* [r57] libcam/filter_fast_bayer.c: Allow inputs to
+	  filter_fast_bayer to have format GRAY.
+	* [r56] camlog/camlog.c, camview/camview.c, libcam/unit_chain.c,
+	  libcam/unit_chain.h: Rewrote and renamed
+	  cam_unit_chain_attach_glib() to require a GMainContext *
+	  argument.
+
+2007-11-30  ashuang
+
+	* [r55] docs/tutorial/fdl.xml, docs/tutorial/fundamentals.xml,
+	  docs/tutorial/otherenvs.xml, docs/tutorial/preface.xml,
+	  docs/tutorial/quickstart.xml, docs/tutorial/tutorial.xml: more
+	  tutorial skeleton
+
+2007-11-29  david.moore
+
+	* [r54] docs/reference/libcam/libcam-sections.txt,
+	  docs/reference/libcam/libcam.types, libcam/filter_bayer.h,
+	  libcam/framebuffer.h, libcam/input_example.h, libcam/pixels.h,
+	  libcam/unit.c, libcam/unit_control.h, libcam/unit_driver.h: Fix
+	  build warnings for gtk-doc
+	* [r53] Makefile.am, camlog, configure.in, docs, docs/reference,
+	  docs/reference/libcam, docs/reference/libcam/Makefile.am,
+	  docs/reference/libcam/libcam-docs.sgml,
+	  docs/reference/libcam/libcam-sections.txt,
+	  docs/reference/libcam/libcam.types: Added gtk-doc stuff
+
+2007-11-29  ashuang
+
+	* [r52] docs/tutorial, docs/tutorial/bookinfo.xml,
+	  docs/tutorial/build-html, docs/tutorial/html,
+	  docs/tutorial/images, docs/tutorial/preface.xml,
+	  docs/tutorial/quickstart.xml, docs/tutorial/tutorial.xml: add
+	  tutorial skeleton
+
+2007-11-29  david.moore
+
+	* [r51] Makefile.am, docs, docs/Makefile.am, docs/reference,
+	  docs/reference/Makefile.am, docs/reference/libcam,
+	  docs/reference/libcam/Makefile.am: Added docs directory structure
+
+2007-11-29  ashuang
+
+	* [r50] libcam/filter_jpeg.c: filter_jpeg: add default huffman
+	  tables when decompressing images missing huffman tables
+
+2007-11-29  david.moore
+
+	* [r49] camview/camview.c, libcam-gtk/Makefile.am,
+	  libcam-gtk/cam_gtk.h, libcam-gtk/unit_chain_gl_widget.c,
+	  libcam-gtk/unit_description_widget.c,
+	  libcam-gtk/unit_description_widget.h,
+	  libcam-gtk/unit_manager_widget.c,
+	  libcam-gtk/unit_manager_widget.h: Added the
+	  CamUnitDescriptionWidget that provides more details about a unit
+	  before adding it to a chain. Added to camview.
+
+2007-11-29  ashuang
+
+	* [r48] libcam/convert_to_rgb8.c, libcam/input_example.c,
+	  libcam/input_log.c, libcam/input_v4l.c, libcam/input_v4l2.c,
+	  libcam/unit.c, libcam/unit.h, libcam/unit_chain.c,
+	  plugins/dc1394/input_dc1394.c, plugins/ladybug2/input_ladybug2.c:
+	  modified CamUnit->try_produce_frame to return a gboolean modified
+	  cam_unit_try_produce_frame to add timeout parameter, return a
+	  gboolean indicating whether ornot a frame was produced.
+
+2007-11-28  ashuang
+
+	* [r47] Makefile.am, camlog, camlog/Makefile.am, camlog/camlog.1,
+	  camlog/camlog.c, camlog/signal_pipe.c, camlog/signal_pipe.h,
+	  configure.in: add camlog program
+
+2007-11-28  david.moore
+
+	* [r46] libcam-gtk/Makefile.am, libcam-gtk/cam_tree_store.c,
+	  libcam-gtk/cam_tree_store.h, libcam-gtk/unit_manager_widget.c:
+	  Fixed drag-and-drop from the unit_manager_widget such that only
+	  rows of the tree that are a unit are draggable.
+
+2007-11-27  david.moore
+
+	* [r45] libcam-gtk/unit_manager_widget.c: Make the renderable icon
+	  prettier
+	* [r44] libcam/log.c: Fix loading of old log files (March 2007 and
+	  earlier) by computing frameno on the fly.
+	* [r43] libcam-gtk/unit_manager_widget.c,
+	  libcam/convert_colorspace.c, libcam/convert_to_rgb8.c,
+	  libcam/filter_bayer.c, libcam/filter_fast_bayer.c,
+	  libcam/filter_gl.c, libcam/filter_jpeg.c, libcam/input_example.c,
+	  libcam/input_log.c, libcam/input_v4l.c, libcam/input_v4l2.c,
+	  libcam/output_logger.c, libcam/unit_driver.c,
+	  libcam/unit_driver.h, libcam/unit_manager.c,
+	  plugins/dc1394/input_dc1394.c, plugins/ladybug2/input_ladybug2.c:
+	  Add the driver "name" field and always show it following the
+	  package name when generating a unit id. The portion following the
+	  colon becomes optional.
+	* [r42] libcam-gtk/pixmaps, libcam-gtk/pixmaps/Makefile.am,
+	  libcam-gtk/pixmaps/renderable.png, libcam-gtk/pixmaps/unit.png:
+	  Added pixmaps directory
+	* [r41] configure.in, libcam-gtk/Makefile.am,
+	  libcam-gtk/unit_manager_widget.c, plugins/ladybug2/Makefile.am:
+	  Add icon to unit_manager_widget to indicate renderability Disable
+	  ladybug driver by default
+
+2007-11-26  david.moore
+
+	* [r40] libcam-gtk/unit_manager_widget.c: Expand the unit manager
+	  widget tree by default
+
+2007-11-21  ashuang
+
+	* [r39] configure.in: added -D_FILE_OFFSET_BITS=64
+	  -D_LARGEFILE_SOURCE to CFLAGS
+	* [r38] libcam/input_v4l2.c: forgot to modify input_v4l2 for new
+	  stream_* behaviors
+	* [r37] libcam/convert_colorspace.c, libcam/convert_to_rgb8.c,
+	  libcam/convert_to_rgb8.h: modified convert_to_rgb8 unit to do
+	  generic CamUnit wrapping rather than re-implementing conversion
+	  routines. Added bayer support to convert_to_rgb8 via fast debayer
+	  unit. added bgra->rgb conversion to convert_colorspace unit
+	* [r36] libcam/convert_colorspace.c, libcam/convert_to_rgb8.c,
+	  libcam/filter_bayer.c, libcam/filter_fast_bayer.c,
+	  libcam/input_example.c, libcam/input_log.c, libcam/input_v4l.c,
+	  libcam/unit.c, libcam/unit.h, plugins/dc1394/input_dc1394.c,
+	  plugins/ladybug2/input_ladybug2.c: change CamUnit so that
+	  cam_unit_stream_init, cam_unit_stream_on, cam_unit_stream_off,
+	  cam_unit_stream_shutdown always do both error checking (that
+	  CamUnit is in the required state, etc.) and the actual state
+	  setting. Subclasses of CamUnit now simply return 0 if it is okay
+	  to change state, and -1 if it is not.
+
+2007-11-18  david.moore
+
+	* [r35] libcam/log.c: Eliminate possible deadlock in log seeking
+	  code and make it slightly more efficient.
+
+2007-11-18  ashuang
+
+	* [r34] libcam-gtk/unit_chain_gl_widget.c,
+	  libcam-gtk/unit_chain_gl_widget.h,
+	  libcam-gtk/unit_control_widget.c: fix memory leak in
+	  unit_control_widget modify unit_chain_gl_widget to display text
+	  info messages when no units in chain and when no renderable units
+	  in chain
+
+2007-11-18  david.moore
+
+	* [r33] camview/camview.c, libcam/Makefile.am, libcam/dbg.h,
+	  libcam/framebuffer.c, libcam/framebuffer.h, libcam/input_log.c,
+	  libcam/input_log.h, libcam/input_v4l2.c, libcam/log.c,
+	  libcam/log.h, libcam/output_logger.c, libcam/output_logger.h,
+	  libcam/unit_manager.c, plugins/dc1394/input_dc1394.c,
+	  plugins/ladybug2/input_ladybug2.c: Added logging capability back
+	  to libcam. Added new metadata dictionary to the log file format.
+	  Cleaned up log implementation. Removed the source_uid field
+	  anywhere it appears, replaced with metadata.
+
+2007-11-17  ashuang
+
+	* [r31] libcam-gtk/libcam-gtk.pc.in: fixed libcam-gtk.pc.in to
+	  depend on libcam, not cam
+
+2007-11-16  ashuang
+
+	* [r30] examples/Makefile, examples/snapshot.c,
+	  libcam/convert_to_rgb8.c: update convert_to_rgb8 to passthrough
+	  RGB source images updated examples/snapshot.c to snapshot from
+	  arbitrary image sources
+	* [r29] libcam/Makefile.am, libcam/convert_colorspace.c,
+	  libcam/convert_to_rgb8.c, libcam/convert_to_rgb8.h,
+	  libcam/filter_jpeg.c, libcam/pixels.c, libcam/pixels.h,
+	  libcam/unit_manager.c: added convert_to_rgb8 (unit for doing any
+	  format -> rgb conversion) added pixel conversion function for
+	  yuv422 -> rgb (already had -> bgra, -> gray)
+	* [r28] camview/Makefile.am, camview/camview.1, camview/camview.c:
+	  add camview manpage debian packaging work
+
+2007-11-15  ashuang
+
+	* [r26] configure.in, libcam-gtk, libcam-gtk/Makefile.am,
+	  libcam-gtk/cam_gtk.h, libcam-gtk/libcam-gtk.pc.in,
+	  libcam/filter_gl.c, libcam/filter_gl.h, libcam/gl_texture.c,
+	  libcam/gl_texture.h, plugins/ladybug2: created pkg-config file
+	  for libcam-gtk renamed GLTexture to CamGLTexture updated
+	  svn:ignore
+	* [r25] configure.in, libcam-gtk/Makefile.am, libcam/cam.h,
+	  libcam/framebuffer.c, libcam/framebuffer.h, plugins/Makefile.am,
+	  plugins/ladybug2, plugins/ladybug2/Makefile.am,
+	  plugins/ladybug2/input_ladybug2.c,
+	  plugins/ladybug2/input_ladybug2.h: restored DH_COMPAT=4 in debian
+	  packaging added ladybug2 input plugin export gl_drawing_area.h in
+	  include/ remove cam_framebuffer_set_metadata_string change
+	  framebuffer metadata value type from char* to uint8_t* update
+	  documentation of framebuffer metadata key to be UTF8 instead of
+	  ASCII
+
+2007-11-15  david.moore
+
+	* [r24] libcam/framebuffer.c, libcam/framebuffer.h: Allow the
+	  framebuffer metadata to contain data that is not null-terminated.
+
+2007-11-15  ashuang
+
+	* [r20] libcam/framebuffer.c, libcam/framebuffer.h: add metadata
+	  dictionary to framebuffer
+
+2007-11-14  david.moore
+
+	* [r19] libcam/unit_control.c, plugins/dc1394/input_dc1394.c: Fix
+	  dc1394 controls
+
+2007-11-14  ashuang
+
+	* [r18] libcam-gtk/unit_control_widget.c, libcam/input_v4l.c,
+	  libcam/input_v4l2.c: v4l2: implement V4L2_CTRL_TYPE_BUTTON as
+	  boolean one shot control v4l2 - allow v4l2 pixelformat and cam
+	  pixelformat to be different v4l - produce frame even if read
+	  doesn't read full amount requested
+	* [r17] AUTHORS, examples/snapshot.c, libcam/convert_colorspace.c,
+	  libcam/convert_colorspace.h, libcam/pixels.c, libcam/unit.c:
+	  change albert's e-mail to ashuang@alum.mit.edu fix unit control
+	  bug in unit.c trim down colorspace conversion unit
+	* [r16] libcam/input_v4l2.c, libcam/unit_control.c,
+	  plugins/dc1394/input_dc1394.c: give v4l2 controls friendlier ids
+	  when possible move input_dc1394 from package "dc1394" to
+	  "input.dc1394"
+	* [r15] configure.in, libcam/Makefile.am, libcam/input_v4l.c,
+	  libcam/input_v4l.h, libcam/input_v4l2.c, libcam/input_v4l2.h:
+	  build input_v4l and input_v4l2 into libcam if target OS is linux
+	  (hopefully) fix input_v4l and input_v4l2 for new control API
+
+2007-11-14  david.moore
+
+	* [r14] libcam/plugin.c, plugins/dc1394/Makefile.am: Fix
+	  input_dc1394 linking
+	* [r13] Makefile.am, camview, configure.in, libcam-gtk,
+	  libcam-gtk/Makefile.am, libcam/Makefile.am,
+	  libcam/input_dc1394.c, libcam/input_dc1394.h, plugins,
+	  plugins/Makefile.am, plugins/dc1394, plugins/dc1394/Makefile.am,
+	  plugins/dc1394/input_dc1394.c, plugins/dc1394/input_dc1394.h:
+	  Added input_dc1394 to the build as a plugin
+
+2007-11-13  ashuang
+
+	* [r12] camview, camview/Makefile, camview/Makefile.am,
+	  camview/camview.c, camview/gtk_util.h, configure.in, libcam-gtk,
+	  libcam-gtk/Makefile, libcam-gtk/Makefile.am: autotoolizing for
+	  libcam-gtk and camview should work now
+	* [r11] Makefile.am, camview/Makefile, configure.in,
+	  libcam-gtk/Makefile, libcam-gtk/unit_control_widget.c: fix
+	  libcam-gtk for new control API autotoolizing libcam-gtk and
+	  camview (doesn't work yet, gthread issues)
+	* [r10] libcam/input_v4l2.c, libcam/unit.c, libcam/unit_control.c,
+	  libcam/unit_control.h: renamed unit control *_menu functions and
+	  fields to *_enum
+	* [r9] libcam/filter_bayer.c, libcam/filter_fast_bayer.c,
+	  libcam/filter_jpeg.c, libcam/input_dc1394.c,
+	  libcam/input_example.c, libcam/input_example.h,
+	  libcam/input_log.c, libcam/input_log.h, libcam/unit.c,
+	  libcam/unit.h, libcam/unit_control.c, libcam/unit_control.h:
+	  changed unit control API. probably broke everything. have not yet
+	  updated input_v4l or input_v4l2 to new control API
+	* [r8] libcam/Makefile.am, libcam/cam.h,
+	  libcam/convert_colorspace.c, libcam/convert_colorspace.h,
+	  libcam/filter_color_convert.c, libcam/filter_color_convert.h,
+	  libcam/filter_fast_bayer.h, libcam/filter_gl.h,
+	  libcam/filter_jpeg.h, libcam/framebuffer.h,
+	  libcam/input_example.h, libcam/input_log.c, libcam/input_log.h,
+	  libcam/libcam-gmarshal.c, libcam/log.c, libcam/log.h,
+	  libcam/unit.h, libcam/unit_chain.c, libcam/unit_chain.h,
+	  libcam/unit_control.h, libcam/unit_driver.h,
+	  libcam/unit_format.h, libcam/unit_manager.c: change LIBTOOL to
+	  LIBTOOL --silent fix compile warnings (missing-prototypes) added
+	  input_log.[ch] and log.[ch] renamed filter_color_convert.[ch] to
+	  convert_colorspace.[ch]
+	* [r7] libcam-gtk/unit_control_widget.c, libcam/unit.c,
+	  libcam/unit.h: rename cam_unit_stream_set_preferred_format to
+	  cam_unit_set_preferred_format, modified to take pixelformat,
+	  width, height as args instead of one big CamUnitFormat struct
+	* [r6] examples/Makefile, examples/snapshot.c: add snapshot
+	  (doesn't link properly yet) example
+	* [r5] camview/Makefile, camview/camview.c, camview/gtk_util.c,
+	  camview/gtk_util.h, libcam-gtk/unit_chain_widget.c: camview more
+	  or less working again (still needs some tweaks, e.g. font of
+	  frame labels)
+	* [r4] camview, camview/Makefile, camview/camview.c, examples,
+	  libcam-gtk/Makefile, libcam-gtk/cam_gtk.h, libcam/cam.h, plugins:
+	  add empty directories for plugins, examples start porting camview
+	  (removing glade dependency)
+
+2007-11-13  david.moore
+
+	* [r3] ., AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am, NEWS,
+	  README, configure.in, libcam, libcam.spec.in, libcam/Makefile,
+	  libcam/Makefile.am, libcam/libcam.pc.in, m4, m4/Makefile.am, po,
+	  po/Makevars, po/POTFILES.in: First attempt at autotoolizing
+	  libcam
+
+2007-11-10  ashuang
+
+	* [r2] libcam, libcam-gtk, libcam-gtk/Makefile,
+	  libcam-gtk/cam_gtk.h, libcam-gtk/gl_drawing_area.c,
+	  libcam-gtk/gl_drawing_area.h, libcam-gtk/unit_chain_gl_widget.c,
+	  libcam-gtk/unit_chain_gl_widget.h,
+	  libcam-gtk/unit_chain_widget.c, libcam-gtk/unit_chain_widget.h,
+	  libcam-gtk/unit_control_widget.c,
+	  libcam-gtk/unit_control_widget.h,
+	  libcam-gtk/unit_manager_widget.c,
+	  libcam-gtk/unit_manager_widget.h, libcam/Makefile, libcam/cam.h,
+	  libcam/capture_raw1394.c, libcam/capture_raw1394.h, libcam/dbg.h,
+	  libcam/filter_bayer.c, libcam/filter_bayer.h,
+	  libcam/filter_color_convert.c, libcam/filter_color_convert.h,
+	  libcam/filter_fast_bayer.c, libcam/filter_fast_bayer.h,
+	  libcam/filter_gl.c, libcam/filter_gl.h, libcam/filter_jpeg.c,
+	  libcam/filter_jpeg.h, libcam/framebuffer.c, libcam/framebuffer.h,
+	  libcam/fwtrigger.c, libcam/gl_texture.c, libcam/gl_texture.h,
+	  libcam/input_dc1394.c, libcam/input_dc1394.h,
+	  libcam/input_example.c, libcam/input_example.h,
+	  libcam/input_v4l.c, libcam/input_v4l.h, libcam/input_v4l2.c,
+	  libcam/input_v4l2.h, libcam/libcam-gmarshal.c,
+	  libcam/libcam-gmarshal.h, libcam/libcam-gmarshal.list,
+	  libcam/pixels.c, libcam/pixels.h, libcam/plugin.c,
+	  libcam/plugin.h, libcam/unit.c, libcam/unit.h,
+	  libcam/unit_chain.c, libcam/unit_chain.h, libcam/unit_control.c,
+	  libcam/unit_control.h, libcam/unit_driver.c,
+	  libcam/unit_driver.h, libcam/unit_format.c, libcam/unit_format.h,
+	  libcam/unit_manager.c, libcam/unit_manager.h, libcam/vendor,
+	  libcam/vendor/pwc-ioctl.h: first import of libcam and libcam-gtk
+
+2007-11-09  
+
+	* [r1] .: Initial directory structure.
+

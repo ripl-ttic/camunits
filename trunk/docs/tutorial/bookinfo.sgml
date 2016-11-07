@@ -1,0 +1,31 @@
+<bookinfo>
+    <title>Camunits Tutorial</title>
+<authorgroup>
+<author>
+    <firstname>Albert</firstname>
+    <surname>Huang</surname>
+</author>
+</authorgroup>
+
+<abstract>
+<para>
+    This tutorial provides an introduction to developing image processing and
+    machine vision applications with Camunits.
+</para>
+</abstract>
+
+<copyright>
+<year>2007-2009</year>
+<holder>Albert Huang, David Moore</holder>
+</copyright>
+
+<keywordset>
+    <keyword>camunits</keyword>
+    <keyword>dc1394</keyword>
+    <keyword>v4l</keyword>
+    <keyword>v4l2</keyword>
+    <keyword>camera</keyword>
+    <keyword>machine vision</keyword>
+    <keyword>image processing</keyword>
+</keywordset>
+</bookinfo>

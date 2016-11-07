@@ -1,0 +1,99 @@
+<refentry id="convert-colorspace" revision="17 Jan 2008">
+<refmeta>
+    <refentrytitle><code>convert.colorspace</code></refentrytitle>
+</refmeta>
+
+<refnamediv>
+    <refname>Colorspace Conversion</refname>
+    <refpurpose>General purpose colorspace conversion</refpurpose>
+</refnamediv>
+
+<refsect1>
+    <title>Description</title>
+
+    <para>
+    <literal>convert.colorspace</literal> provides a suite of colorspace
+    conversion routines to convert images from one format to another.  Only
+    uncompressesd formats are supported.
+    </para>
+
+<table id="table:convert-colorspace-formats">
+    <title>Supported Conversions</title>
+
+    <tgroup cols="2">
+    <thead>
+    <row>
+    <entry>Input Format</entry>
+    <entry>Output Formats</entry>
+    </row>
+    </thead>
+        <tbody>
+            <row>
+                <entry><simpara>BGR 24bpp</simpara></entry>
+                <entry><simplelist>
+                <member>RGB 24bpp</member>
+                </simplelist></entry>
+            </row>
+            <row>
+                <entry><simpara>BGRA 32bpp</simpara></entry>
+                <entry><simplelist>
+                <member>RGB 24bpp</member>
+                <member>BGR 24bpp</member>
+                </simplelist></entry>
+            </row>
+            <row>
+                <entry><simpara>Gray 8bpp</simpara></entry>
+                <entry><simplelist>
+                <member>RGB 24bpp</member>
+                <member>RGBA 32bpp</member>
+                </simplelist></entry>
+            </row>
+            <row>
+                <entry><simpara>RGB 24bpp</simpara></entry>
+                <entry><simplelist>
+                <member>Gray 8bpp</member>
+                <member>BGR 24bpp</member>
+                <member>BGRA 32bpp</member>
+                </simplelist></entry>
+            </row>
+            <row>
+                <entry><simpara>UYVY</simpara></entry>
+                <entry><simplelist>
+                <member>BGRA 32bpp</member>
+                <member>RGB 24bpp</member>
+                <member>Gray 8bpp</member>
+                </simplelist></entry>
+            </row>
+            <row>
+                <entry><simpara>YUV 420p</simpara></entry>
+                <entry><simplelist>
+                <member>RGB 24bpp</member>
+                <member>RGBA 32bpp</member>
+                <member>BGR 24bpp</member>
+                <member>BGRA 32bpp</member>
+                <member>Gray 8bpp</member>
+                </simplelist></entry>
+            </row>
+            <row>
+                <entry><simpara>YUYV</simpara></entry>
+                <entry><simplelist>
+                <member>BGRA 32bpp</member>
+                <member>RGB 24bpp</member>
+                <member>Gray 8bpp</member>
+                </simplelist></entry>
+            </row>
+        </tbody>
+    </tgroup>
+</table>
+
+</refsect1>
+
+<refsect1>
+    <title>Controls</title>
+
+    <simpara>
+    None.
+    </simpara>
+</refsect1>
+
+</refentry>

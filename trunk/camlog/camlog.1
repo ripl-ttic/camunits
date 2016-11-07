@@ -1,0 +1,76 @@
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.TH camlog 1
+.SH NAME
+camlog \- Image stream logger
+.SH SYNOPSIS
+.TP 5
+\fBcamlog \fI[options]\fR
+
+.SH DESCRIPTION
+.PP
+\fBcamlog\fR is a tool for writing video data to disk, primarily to save
+data for post-processing and analysis.  The video source written to
+disk is determined by specifying either the -i or -c flag -- exactly
+one of these must be specified.  Logfiles produced by camlog are
+suitable for loading with the Camunits input.log unit.
+
+Using the -i option is simpler, and is useful for dealing with an
+input unit where the default settings are sufficient.  If the default
+unit settings are not sufficient, or pre-log processing is desired,
+then use the -c option and specify a chain description file as produced
+by camview or the cam_unit_chain_snapshot() function.
+
+.SH OPTIONS
+The following options are provided by \fBcamlog\fR using the standard GNU
+command line syntax:
+.TP
+.B \-i, \-\-input=\fIID\fB
+Loads the specified input source.  \fISOURCE\fR should be a Camunits unit id.
+.TP
+.B \-c, \-\-chain=\fINAME\fB
+Loads the chain from file NAME.
+.TP
+.B \-o, \-\-output=\fIFILE\fB
+Saves result to filename FILE.  If not specified, a filename is automatically
+chosen.
+.TP
+.B \-f, \-\-force
+Force overwrite of output_file if it already exists.  If not specified, and the output file already exists, then a suffix is automatically appended to the
+filename to prevent overwriting existing files.
+.TP
+.B \-n, \-\-no-write
+Do not write video data to disk.  Useful for testing.
+.TP
+.B \-v, \-\-verbose
+Be more verbose.
+.TP
+.B \-\-plugin\-path=\fIPATH\fB
+Add the directories in PATH to the plugin search path.  PATH should be a
+colon-delimited list.
+.TP
+.B \-h, \-\-help
+Print this help text and exit.
+
+.SH AUTHORS
+
+ Albert Huang <\fIashuang@alum.mit.edu\fR>
+.br
+ David Moore <\fIdcm@acm.org\fR>

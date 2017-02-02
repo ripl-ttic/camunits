@@ -1,0 +1,6 @@
+snapshot
+trivial-acquire
+.libs
+.deps
+Makefile
+Makefile.in

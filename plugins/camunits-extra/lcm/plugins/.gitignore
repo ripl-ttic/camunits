@@ -1,0 +1,6 @@
+camlcm*.c
+camlcm*.h
+Makefile.in
+Makefile
+.libs
+.deps

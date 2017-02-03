@@ -1,6 +1,6 @@
 # Downloading and Installing CamUnits #
 
-To stay on the bleeding edge of Camunits development, you'll want to work from our Git repositories hosted on Google Code.
+
 
 You will want at least the following:
 
@@ -14,7 +14,7 @@ You will want at least the following:
 
 1. Checkout the repository
 ~~~~
-    $ svn checkout http://camunits.googlecode.com/svn/trunk/ camunits-read-only
+    $ 
 ~~~~
 2. Setup the build scripts
 ~~~~
@@ -58,7 +58,11 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ~~~~
 in order for the Camunits ./configure script to detect libdc1394.
 
+
+
 * * *
+
+
 
 #Frequently Asked Questions#
 

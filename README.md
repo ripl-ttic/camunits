@@ -64,9 +64,9 @@ in order for the Camunits ./configure script to detect libdc1394.
 
 
 
-#Frequently Asked Questions#
+# Frequently Asked Questions #
 
-** How does Camunits compare with OpenCV? **
+## How does Camunits compare with OpenCV? ##
 
 Camunits differs from OpenCV in two major aspects.  The first is that Camunits is a framework for developing image acquisition and processing algorithms and applications, whereas OpenCV provides a collection of already developed algorithms.  Camunits is intended to simplify both the process of exposing and experimenting with parameters for machine vision algorithms, and the process of visualizing and debugging the result of such algorithms.
 
@@ -76,7 +76,7 @@ In short, Camunits is designed to streamline the process of developing both imag
 
 
 
-** Why is Camunits written in C and not C++? **
+## Why is Camunits written in C and not C++? ##
 
 Simplicity and portability.
 
@@ -86,7 +86,7 @@ Simplicity and portability.
 
  * There are many C programmers out there who don't like C++.  Writing Camunits in C allows both C and C++ programmers to use Camunits.
 
-** Can I do something like ** `{{{while(1) { img = grab_image(); } }}}`?
+## Can I do something like ## `{{{while(1) { img = grab_image(); } }}}`?
 
 In short, no.  Camunits always delivers images via function callbacks.  To receive an image, your program must connect to the `frame-ready` signal of a CamUnit or a CamUnitChain.
 
